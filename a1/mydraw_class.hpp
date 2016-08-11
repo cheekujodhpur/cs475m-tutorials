@@ -22,6 +22,29 @@ public:
 
 //------------------------
 
+//pen_t class
+
+class pen_t {
+private:
+  unsigned int size;
+  color_t c;
+  bool mode;    //false means eraser mode, true means draw mode
+public:
+  pen_t();
+  pen_t(const unsigned int _size, 
+        const color_t _c, 
+        const bool mode = true);
+
+  void set_size(const unsigned int _size);
+  void set_color(const color_t _c);
+  void set_mode(const bool _mode);
+  unsigned int Size(void);
+  color_t Color(void);
+  bool Mode(void);
+};
+
+//------------------------
+
 //point_t class
 class point_t {
 
