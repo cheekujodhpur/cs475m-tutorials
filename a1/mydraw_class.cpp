@@ -46,3 +46,44 @@ bool pen_t::Mode(void) { return mode; }
 
 
 //---------------------
+
+//-------------------
+//fill_t methods
+
+fill_t::fill_t():fc(color_t()) { }
+
+fill_t::fill_t(const color_t _fc)
+		 :fc(_fc) { }
+
+void fill_t::set_fc(const color_t _fc){
+    fc = _fc;
+}
+
+void fill_t::draw(point_t seed){
+}
+
+//---------------------
+
+//-------------------
+//point_t methods
+
+point_t::point_t():x(0),y(0) { }
+
+point_t::point_t(const int _x, const int _y)
+		 :x(_x),y(_y) { }
+
+void point_t::set_x(int _x){
+    x = _x;
+}
+void point_t::set_y(int _y){
+    y = _y;
+}
+
+int point_t::X(void){return x;}
+int point_t::Y(void){return y;}
+
+void point_t::draw(void){
+    //TODO:Implement the draw point
+}
+
+//---------------------
