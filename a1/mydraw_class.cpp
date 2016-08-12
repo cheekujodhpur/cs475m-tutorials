@@ -82,14 +82,23 @@ void point_t::set_y(int _y){
 int point_t::X(void){return x;}
 int point_t::Y(void){return y;}
 
-void point_t::draw(void){
-    //TODO:Implement the draw point
+void point_t::draw(canvas_t &canvas, pen_t pen){
+    float *pixels = canvas.Pixels();
+    int w = canvas.W(), h = canvas.H();     // to know the maximum extent
+
+    // convert to bottom left
+    int gl_x = x, gl_y = h-y;
+
+    if(pen.Mode())
+        *((color_t*)&pixels[3*(w*gl_y+gl_x)]) = pen.Color();
+    else
+        *((color_t*)&pixels[3*(w*gl_y+gl_x)]) = canvas.BG();
 }
 
 //---------------------
 //canvas_t methods
 
-canvas_t::canvas_t():w(512),h(512),bg(color_t()) {
+canvas_t::canvas_t():w(512),h(512),bg(color_t(1.0f,1.0f,1.0f)) {
     int size = w*h;
     pixels = new float[size*3];
     clear();
@@ -114,5 +123,8 @@ void canvas_t::clear(void){
 }
 
 float* canvas_t::Pixels(void){return pixels;}
+int canvas_t::W(void){return w;}
+int canvas_t::H(void){return h;}
+color_t canvas_t::BG(void){return bg;}
 
 //---------------------

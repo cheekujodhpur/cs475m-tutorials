@@ -18,7 +18,8 @@ int win_width = 512;
 //Window height
 int win_height = 512;
 
-canvas_t canvas(win_width, win_height, color_t());
+canvas_t canvas(win_width, win_height, color_t(1.0f, 1.0f, 1.0f));
+pen_t pen;
 
 //Display callback
 void display( void )
@@ -72,7 +73,8 @@ void mouse(int button, int state, int x, int y)
      {
        if (button == GLUT_LEFT_BUTTON) 
 	 {
-	   //Do something when the left mouse button is clicked
+         point_t point(x, y);
+         point.draw(canvas, pen);
 	 }
      }
    glutPostRedisplay();

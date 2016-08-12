@@ -43,6 +43,28 @@ public:
 };
 
 //------------------------
+//canvas_t class
+
+class canvas_t {
+private:
+  int w;    //width
+  int h;    //height
+  color_t bg;   //background color
+  float *pixels;   //storing the pixels
+public:
+  canvas_t();
+  canvas_t(const int w, const int h, const color_t _bg);
+
+  void set_bg(color_t _bg);
+  void clear();
+
+  float* Pixels(void);
+  int W(void);
+  int H(void);
+  color_t BG(void);
+};
+
+//------------------------
 
 //point_t class
 class point_t {
@@ -58,7 +80,7 @@ public:
   int X(void);
   int Y(void);
 
-  void draw(void);
+  void draw(canvas_t &canvas, pen_t pen);
 };
 
 //------------------------
@@ -78,24 +100,5 @@ public:
 
 //------------------------
 
-//canvas_t class
-
-class canvas_t {
-private:
-  int w;    //width
-  int h;    //height
-  color_t bg;   //background color
-  float *pixels;   //storing the pixels
-public:
-  canvas_t();
-  canvas_t(const int w, const int h, const color_t _bg);
-
-  void set_bg(color_t _bg);
-  void clear();
-
-  float* Pixels(void);
-};
-
-//------------------------
 
 #endif
