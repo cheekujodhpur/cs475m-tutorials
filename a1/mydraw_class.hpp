@@ -1,6 +1,5 @@
 #ifndef _MYDRAW_CLASS_HPP_
-#define _MYDRAW_CLASS_HPP_
-
+#define _MYDRAW_CLASS_HPP_ 
 //Define all classes like the color class, adding appropriate methods and data members. 
 //Implementation of the methods go into the corresponding cpp file
 
@@ -86,12 +85,15 @@ private:
   int w;    //width
   int h;    //height
   color_t bg;   //background color
+  float *pixels;   //storing the pixels
 public:
   canvas_t();
   canvas_t(const int w, const int h, const color_t _bg);
 
   void set_bg(color_t _bg);
-  void clear(void);
+  void clear();
+
+  float* Pixels(void);
 };
 
 //------------------------

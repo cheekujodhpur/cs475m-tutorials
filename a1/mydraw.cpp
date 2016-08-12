@@ -18,7 +18,7 @@ int win_width = 512;
 //Window height
 int win_height = 512;
 
-
+canvas_t canvas(win_width, win_height, color_t());
 
 //Display callback
 void display( void )
@@ -26,13 +26,7 @@ void display( void )
   //This clears the colorbuffer (current window)
   glClear(GL_COLOR_BUFFER_BIT);
 
-  int size = win_width*win_height;
-  float *pixels = new float[size*3];
-  for(int i=0;i<size;i++) {
-      ((color_t*)&pixels[i*3])->set(0.5f, 0.30f, 00.0f);
-  } 
-
-  glDrawPixels(win_width, win_height, GL_RGB, GL_FLOAT, pixels);
+  glDrawPixels(win_width, win_height, GL_RGB, GL_FLOAT, canvas.Pixels());
 
   //Flush the framebuffer to the screen
   glutSwapBuffers();
