@@ -79,4 +79,21 @@ public:
 
 //------------------------
 
+//canvas_t class
+
+class canvas_t {
+private:
+  int w;    //width
+  int h;    //height
+  color_t bg;   //background color
+public:
+  canvas_t();
+  canvas_t(const int w, const int h, const color_t _bg);
+
+  void set_bg(color_t _bg);
+  void clear(void);
+};
+
+//------------------------
+
 #endif

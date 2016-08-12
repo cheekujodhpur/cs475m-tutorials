@@ -87,3 +87,17 @@ void point_t::draw(void){
 }
 
 //---------------------
+//canvas_t methods
+
+canvas_t::canvas_t():w(512),h(512),bg(color_t()) { }
+
+canvas_t::canvas_t(const int _w, const int _h, const color_t _bg)
+		 :w(_w),h(_h),bg(_bg) { }
+
+void canvas_t::set_bg(color_t _bg){
+    bg = _bg;
+}
+void clear(void){
+}
+
+//---------------------
