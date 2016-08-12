@@ -89,15 +89,30 @@ void point_t::draw(void){
 //---------------------
 //canvas_t methods
 
-canvas_t::canvas_t():w(512),h(512),bg(color_t()) { }
+canvas_t::canvas_t():w(512),h(512),bg(color_t()) {
+    int size = w*h;
+    pixels = new float[size*3];
+    clear();
+}
 
 canvas_t::canvas_t(const int _w, const int _h, const color_t _bg)
-		 :w(_w),h(_h),bg(_bg) { }
+		 :w(_w),h(_h),bg(_bg) { 
+    int size = w*h;
+    pixels = new float[size*3];
+    clear();
+}
 
 void canvas_t::set_bg(color_t _bg){
     bg = _bg;
 }
-void clear(void){
+
+void canvas_t::clear(void){
+    int size = w*h;
+    for(int i = 0;i < size;i++){
+        *((color_t*)&pixels[i*3]) = bg; //clear with background color
+    } 
 }
+
+float* canvas_t::Pixels(void){return pixels;}
 
 //---------------------
