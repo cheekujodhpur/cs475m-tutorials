@@ -21,6 +21,9 @@ int win_height = 512;
 canvas_t canvas(win_width, win_height, color_t(1.0f, 1.0f, 1.0f));
 pen_t pen;
 
+// the modes
+int mode = 0;   //0 means point, 1 means line, 2 means triangle
+
 //Display callback
 void display( void )
 {
@@ -57,8 +60,11 @@ void keyboard( unsigned char key, int x, int y ) {
   case 27: 
     exit(0);
     break;
-    //Do something when 'C' is pressed
-  case 'C':
+  case 'J':
+    unsigned int size;
+    std::cout << "Enter new pen width: ";
+    std::cin >> size;
+    pen.set_size(size);
     break;
     //Ignore all other keypresses
   default:

@@ -86,13 +86,35 @@ void point_t::draw(canvas_t &canvas, pen_t pen){
     float *pixels = canvas.Pixels();
     int w = canvas.W(), h = canvas.H();     // to know the maximum extent
 
+    color_t c;
+    // pen Mode
+    if(pen.Mode())
+        c = pen.Color();
+    else
+        c = canvas.BG();
+
     // convert to bottom left
     int gl_x = x, gl_y = h-y;
 
-    if(pen.Mode())
-        *((color_t*)&pixels[3*(w*gl_y+gl_x)]) = pen.Color();
-    else
-        *((color_t*)&pixels[3*(w*gl_y+gl_x)]) = canvas.BG();
+    unsigned int size = pen.Size();
+    if(size%2){
+        size = size/2;
+        for(int i = gl_x-size; i<=gl_x+size; i++){
+            for(int j = gl_y-size; j<=gl_y+size; j++){
+                if(i>=0 && i<w && j>=0 && j<h)       
+                    *((color_t*)&pixels[3*(w*j+i)]) = c;
+            }
+        }
+    }
+    else{
+        size = size/2;
+        for(int i = gl_x-size; i<gl_x+size; i++){
+            for(int j = gl_y-size; j<gl_y+size; j++){
+                if(i>=0 && i<w && j>=0 && j<h)       
+                    *((color_t*)&pixels[3*(w*j+i)]) = c;
+            }
+        }
+    }
 }
 
 //---------------------
