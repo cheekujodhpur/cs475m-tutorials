@@ -55,7 +55,7 @@ fill_t::fill_t():fc(color_t()) { }
 fill_t::fill_t(const color_t _fc)
 		 :fc(_fc) { }
 
-void fill_t::set_fc(const color_t _fc){
+void fill_t::set_fc(color_t _fc){
     fc = _fc;
 }
 

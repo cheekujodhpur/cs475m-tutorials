@@ -97,7 +97,7 @@ public:
   fill_t();
   fill_t(const color_t _fc);
 
-  void set_fc(const color_t _fc);
+  void set_fc(color_t _fc);
   void draw(point_t seed);
 };
 
