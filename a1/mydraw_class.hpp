@@ -103,5 +103,40 @@ public:
 
 //------------------------
 
+//line_t class
+
+class line_t {
+private:
+  ;
+public:
+  ;
+};
+
+//------------------------
+//triangle_t class
+
+class triangle_t {
+private:
+  ;
+public:
+  ;
+};
+
+//------------------------
+
+//drawing_t class
+
+class drawing_t {
+private:
+  ;
+public:
+  drawing_t();
+
+  void draw_point(point_t point);
+  void draw_line(line_t line);
+  void draw_triangle(triangle_t triangle);
+};
+
+//------------------------
 
 #endif

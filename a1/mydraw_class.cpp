@@ -162,3 +162,26 @@ color_t canvas_t::get_pixel(int x, int y){
 }
 
 //---------------------
+//-------------------
+//line_t methods
+
+
+//---------------------
+//-------------------
+//triangle_t methods
+
+
+//---------------------
+//-------------------
+//drawing_t methods
+
+drawing_t::drawing_t(){}
+
+void drawing_t::draw_point(point_t point){
+}
+void drawing_t::draw_line(line_t line){
+}
+void drawing_t::draw_triangle(triangle_t triangle){
+}
+
+//---------------------
