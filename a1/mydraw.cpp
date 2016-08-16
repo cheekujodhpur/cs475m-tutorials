@@ -17,10 +17,11 @@
 int win_width = 512;
 //Window height
 int win_height = 512;
-
+float r,g,b;
 canvas_t canvas(win_width, win_height, color_t(1.0f, 1.0f, 1.0f));
 pen_t pen;
-
+color_t color;
+color_t bg_color;
 // the modes
 int mode = 0;   //0 means point, 1 means line, 2 means triangle
 
@@ -65,6 +66,22 @@ void keyboard( unsigned char key, int x, int y ) {
     std::cout << "Enter new pen width: ";
     std::cin >> size;
     pen.set_size(size);
+    break;
+  case 'H':
+    std::cout << "Enter pen color (r,g,b): ";
+    std::cin >> r >> g >> b;
+    color.set(r,g,b);
+    pen.set_color(color);
+	break;
+  case 'I':
+    std::cout << "Enter background color (r,g,b): ";
+    std::cin >> r >> g >> b;
+    bg_color.set(r,g,b);
+    canvas.set_bg(bg_color);
+    break;
+  case 'C':
+    canvas.clear();
+  	glutPostRedisplay();
     break;
     //Ignore all other keypresses
   default:
