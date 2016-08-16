@@ -93,25 +93,20 @@ void point_t::draw(canvas_t &canvas, pen_t pen){
     else
         c = canvas.BG();
 
-    // convert to bottom left
-    int gl_x = x, gl_y = h-y;
-
     unsigned int size = pen.Size();
     if(size%2){
         size = size/2;
-        for(int i = gl_x-size; i<=gl_x+size; i++){
-            for(int j = gl_y-size; j<=gl_y+size; j++){
-                if(i>=0 && i<w && j>=0 && j<h)       
-                    *((color_t*)&pixels[3*(w*j+i)]) = c;
+        for(int i = x-size; i<=x+size; i++){
+            for(int j = y-size; j<=y+size; j++){
+                canvas.set_pixel(i, j, c);
             }
         }
     }
     else{
         size = size/2;
-        for(int i = gl_x-size; i<gl_x+size; i++){
-            for(int j = gl_y-size; j<gl_y+size; j++){
-                if(i>=0 && i<w && j>=0 && j<h)       
-                    *((color_t*)&pixels[3*(w*j+i)]) = c;
+        for(int i = x-size; i<x+size; i++){
+            for(int j = y-size; j<y+size; j++){
+                canvas.set_pixel(i, j, c);
             }
         }
     }
@@ -148,5 +143,22 @@ float* canvas_t::Pixels(void){return pixels;}
 int canvas_t::W(void){return w;}
 int canvas_t::H(void){return h;}
 color_t canvas_t::BG(void){return bg;}
+
+int canvas_t::set_pixel(int x, int y, color_t c){
+    int gl_x = x, gl_y = h-y;
+    if(gl_x>=0 && gl_x<w && gl_y>=0 && gl_y<h){
+        *((color_t*)&pixels[3*(w*gl_y+gl_x)]) = c;
+        return 1;
+    }
+    else
+        return 0;
+}
+color_t canvas_t::get_pixel(int x, int y){
+    int gl_x = x, gl_y = h-y;
+    if(gl_x>=0 && gl_x<w && gl_y>=0 && gl_y<h)       
+        return *((color_t*)&pixels[3*(w*gl_y+gl_x)]);
+    else
+        return color_t(0.0f,0.0f,0.0f);
+}
 
 //---------------------

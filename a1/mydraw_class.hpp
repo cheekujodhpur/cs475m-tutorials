@@ -62,6 +62,9 @@ public:
   int W(void);
   int H(void);
   color_t BG(void);
+
+  int set_pixel(int x, int y, color_t c);
+  color_t get_pixel(int x, int y);
 };
 
 //------------------------
