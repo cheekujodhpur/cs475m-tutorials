@@ -107,9 +107,18 @@ public:
 
 class line_t {
 private:
-  ;
+  point_t start, end;
 public:
-  ;
+  line_t();
+  line_t(const point_t _start, const point_t _end);
+
+  void set_start(point_t _start);
+  void set_end(point_t _end);
+
+  point_t START(void);
+  point_t END(void);
+
+  void draw(canvas_t &canvas, pen_t pen);  
 };
 
 //------------------------

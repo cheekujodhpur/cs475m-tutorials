@@ -164,8 +164,86 @@ color_t canvas_t::get_pixel(int x, int y){
 //---------------------
 //-------------------
 //line_t methods
+line_t::line_t(){
+    start = point_t();
+    end = point_t();
+}
 
+line_t::line_t(const point_t _start, const point_t _end){
+	start = _start;
+	end = _end;
+}
 
+void line_t::set_start(point_t _start){
+	start = _start;
+}
+
+void line_t::set_end(point_t _end){
+    start = _end;
+}
+
+point_t line_t::START(void){return start;}
+point_t line_t::END(void){return end;}
+
+void line_t::draw(canvas_t &canvas, pen_t pen){
+	int x0 = start.X();
+	int y0 = start.Y();
+	int x1 = end.X();
+	int y1 = end.Y();
+ 	bool steep;
+	float abs = (float(y1-y0)/float(x1-x0));
+	if ( abs>1 || abs<(-1) )
+		steep = true;
+	else 
+		steep = false;
+  	if (steep)
+    {
+      	int temp = x0; 
+		x0=y0;
+		y0=temp;
+        temp = x1; 
+        x1=y1;
+        y1=temp;
+    }
+  	if (x0 > x1)
+    {
+   		int temp = x0; 
+        x0=x1;
+        x1=temp;
+        temp = y0;     
+        y0=y1;
+        y1=temp;
+    }
+  	int deltax = x1 - x0;
+  	int deltay;
+	if ((y1 - y0)>0)
+		deltay = y1 - y0 ;
+	else
+		deltay = y0 - y1;
+
+  	float error = 0.0;
+  	float deltaerr = (float)deltay / (float)deltax;
+
+  	int ystep;
+  	int y = y0;
+	if (y0 < y1) ystep = 1; else ystep = -1;
+
+  	for (int x=x0; x < x1; x++)
+    {
+      	if (steep)
+          point_t(y,x).draw(canvas, pen);
+      	else
+          point_t(x,y).draw(canvas, pen);
+
+      	error = error + deltaerr;
+      	if (error >= 0.5)
+        {
+          y = y + ystep;
+          error = error - 1.0;
+        }
+    }
+
+}
 //---------------------
 //-------------------
 //triangle_t methods

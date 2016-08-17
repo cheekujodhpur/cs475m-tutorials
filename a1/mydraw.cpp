@@ -97,6 +97,8 @@ void mouse(int button, int state, int x, int y)
        if (button == GLUT_LEFT_BUTTON) 
 	 {
          point_t point(x, y);
+		 line_t line(point_t(0,0),point);
+		 line.draw(canvas,pen);
          point.draw(canvas, pen);
 	 }
      }
