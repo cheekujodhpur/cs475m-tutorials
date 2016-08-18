@@ -20,7 +20,6 @@ int win_height = 512;
 float r,g,b;
 canvas_t canvas(win_width, win_height, color_t(1.0f, 1.0f, 1.0f));
 pen_t pen;
-color_t color;
 color_t bg_color;
 // the modes
 int mode = 0;   //0 means point, 1 means line, 2 means triangle
@@ -70,8 +69,7 @@ void keyboard( unsigned char key, int x, int y ) {
   case 'H':
     std::cout << "Enter pen color (r,g,b): ";
     std::cin >> r >> g >> b;
-    color.set(r,g,b);
-    pen.set_color(color);
+    pen.set_color(color_t(r, g, b));
 	break;
   case 'I':
     std::cout << "Enter background color (r,g,b): ";
