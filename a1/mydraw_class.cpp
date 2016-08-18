@@ -7,9 +7,7 @@ color_t::color_t():r(0.0),g(0.0),b(0.0) { }
 
 color_t::color_t(const float _r, const float _g, const float _b)
 		 :r(_r),g(_g),b(_b) { }
-
-void color_t::set(const float _r, const float _g, const float _b)
-{ 
+void color_t::set(const float _r, const float _g, const float _b) { 
   r=_r; g=_g; b=_b;
 }
 
@@ -182,8 +180,8 @@ void line_t::set_end(point_t _end){
     start = _end;
 }
 
-point_t line_t::START(void){return start;}
-point_t line_t::END(void){return end;}
+point_t line_t::Start(void){return start;}
+point_t line_t::End(void){return end;}
 
 void line_t::draw(canvas_t &canvas, pen_t pen){
 	int x0 = start.X();

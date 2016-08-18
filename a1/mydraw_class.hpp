@@ -115,8 +115,8 @@ public:
   void set_start(point_t _start);
   void set_end(point_t _end);
 
-  point_t START(void);
-  point_t END(void);
+  point_t Start(void);
+  point_t End(void);
 
   void draw(canvas_t &canvas, pen_t pen);  
 };
