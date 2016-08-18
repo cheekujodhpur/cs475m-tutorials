@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <vector>
 #include <GL/glut.h>
 
 #include "mydraw_class.hpp"
@@ -23,6 +24,8 @@ pen_t pen;
 color_t bg_color;
 // the modes
 int mode = 0;   //0 means point, 1 means line, 2 means triangle
+std::vector<point_t> lpoints;
+int lpcount = 0;
 
 //Display callback
 void display( void )
@@ -82,6 +85,22 @@ void keyboard( unsigned char key, int x, int y ) {
   	glutPostRedisplay();
     break;
     //Ignore all other keypresses
+  case '1':
+    lpoints.clear();
+    lpcount = 0;
+    if(mode==1){
+        mode = 0;
+    }
+    else mode = 1;
+    break;
+  case '2':
+    lpoints.clear();
+    lpcount = 0;
+    if(mode==2){
+        mode = 0;
+    }
+    else mode = 2;
+    break;
   default:
     break;
   }
@@ -95,9 +114,35 @@ void mouse(int button, int state, int x, int y)
        if (button == GLUT_LEFT_BUTTON) 
 	 {
          point_t point(x, y);
-		 line_t line(point_t(0,0),point);
-		 line.draw(canvas,pen);
-         point.draw(canvas, pen);
+         // Simple point drawing
+         if(mode==0){
+             point.draw(canvas, pen);
+         }
+         // Line drawing
+         else if(mode == 1){
+             lpcount++;
+             lpoints.push_back(point);
+
+             if(lpcount == 2){
+                 line_t line(lpoints.end()[-2], lpoints.end()[-1]);
+                 line.draw(canvas, pen);
+                 lpcount--;
+             }
+         }
+         else if(mode == 2){
+             lpcount++;
+             lpoints.push_back(point);
+
+             if(lpcount == 3){
+                 line_t line1(lpoints.end()[-3], lpoints.end()[-2]);
+                 line_t line2(lpoints.end()[-2], lpoints.end()[-1]);
+                 line_t line3(lpoints.end()[-1], lpoints.end()[-3]);
+                 line1.draw(canvas, pen);
+                 line2.draw(canvas, pen);
+                 line3.draw(canvas, pen);
+                 lpcount--;
+             }
+         }
 	 }
      }
    glutPostRedisplay();
