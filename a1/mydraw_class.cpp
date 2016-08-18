@@ -1,4 +1,5 @@
 #include "mydraw_class.hpp"
+#include <stack>
 
 //-------------------
 //color_t methods
@@ -57,22 +58,27 @@ void fill_t::set_fc(color_t _fc){
 }
 
 void fill_t::draw(canvas_t &canvas, color_t &bg, point_t seed){
-  int x = seed.X();
-  int y = seed.Y();
-  if(canvas.match_pixel(x,y,bg)){
-    canvas.set_pixel(x, y, fc);
-  }
-  if(canvas.match_pixel(x-1,y,bg)){
-    draw(canvas, bg, point_t(x-1,y));
-  }
-  if(canvas.match_pixel(x+1,y,bg)){
-    draw(canvas, bg, point_t(x+1,y));
-  }
-  if(canvas.match_pixel(x,y-1,bg)){
-    draw(canvas, bg, point_t(x,y-1));
-  }
-  if(canvas.match_pixel(x,y+1,bg)){
-    draw(canvas, bg, point_t(x,y+1));
+
+  std::stack<point_t> to_color;
+  to_color.push(seed);
+  while(!to_color.empty()){
+      point_t pt = to_color.top();
+      int x = pt.X(), y = pt.Y();
+      canvas.set_pixel(x, y, fc);
+      to_color.pop(); // now remove
+
+      if(canvas.match_pixel(x-1,y,bg)){
+          to_color.push(point_t(x-1,y));
+      }
+      if(canvas.match_pixel(x+1,y,bg)){
+          to_color.push(point_t(x+1,y));
+      }
+      if(canvas.match_pixel(x,y-1,bg)){
+          to_color.push(point_t(x,y-1));
+      }
+      if(canvas.match_pixel(x,y+1,bg)){
+          to_color.push(point_t(x,y+1));
+      }
   }
 }
 

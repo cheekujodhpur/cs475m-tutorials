@@ -91,6 +91,11 @@ void keyboard( unsigned char key, int x, int y ) {
   case 'F':
     fill_flag = true;
     break;
+  case 'G':
+    std::cout << "Enter fill color (r,g,b): ";
+    std::cin >> r >> g >> b;
+    fill.set_fc(color_t(r, g, b));
+	break;
   case '1':
     lpoints.clear();
     lpcount = 0;
