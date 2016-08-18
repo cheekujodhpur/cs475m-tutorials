@@ -22,6 +22,8 @@ float r,g,b;
 canvas_t canvas(win_width, win_height, color_t(1.0f, 1.0f, 1.0f));
 pen_t pen;
 color_t bg_color;
+fill_t fill;
+bool fill_flag = false;
 // the modes
 int mode = 0;   //0 means point, 1 means line, 2 means triangle
 std::vector<point_t> lpoints;
@@ -86,7 +88,9 @@ void keyboard( unsigned char key, int x, int y ) {
     lpcount = 0;
   	glutPostRedisplay();
     break;
-    //Ignore all other keypresses
+  case 'F':
+    fill_flag = true;
+    break;
   case '1':
     lpoints.clear();
     lpcount = 0;
@@ -116,8 +120,15 @@ void mouse(int button, int state, int x, int y)
        if (button == GLUT_LEFT_BUTTON) 
 	 {
          point_t point(x, y);
+         if(fill_flag){
+             color_t fillbg = canvas.get_pixel(x, y);
+             fill.draw(canvas, fillbg, point);
+             fill_flag = false;
+             lpcount = 0;
+             lpoints.clear();
+         }
          // Simple point drawing
-         if(mode==0){
+         else if(mode==0){
              point.draw(canvas, pen);
          }
          // Line drawing

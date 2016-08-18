@@ -65,6 +65,7 @@ public:
 
   int set_pixel(int x, int y, color_t c);
   color_t get_pixel(int x, int y);
+  bool match_pixel(int x, int y, color_t c);
 };
 
 //------------------------
@@ -98,7 +99,7 @@ public:
   fill_t(const color_t _fc);
 
   void set_fc(color_t _fc);
-  void draw(point_t seed);
+  void draw(canvas_t &canvas, color_t &bg, point_t seed);
 };
 
 //------------------------

@@ -15,7 +15,6 @@ float color_t::R(void) { return r; }
 float color_t::G(void) { return g; }
 float color_t::B(void) { return b; }
 
-
 //---------------------
 
 //-------------------
@@ -57,7 +56,24 @@ void fill_t::set_fc(color_t _fc){
     fc = _fc;
 }
 
-void fill_t::draw(point_t seed){
+void fill_t::draw(canvas_t &canvas, color_t &bg, point_t seed){
+  int x = seed.X();
+  int y = seed.Y();
+  if(canvas.match_pixel(x,y,bg)){
+    canvas.set_pixel(x, y, fc);
+  }
+  if(canvas.match_pixel(x-1,y,bg)){
+    draw(canvas, bg, point_t(x-1,y));
+  }
+  if(canvas.match_pixel(x+1,y,bg)){
+    draw(canvas, bg, point_t(x+1,y));
+  }
+  if(canvas.match_pixel(x,y-1,bg)){
+    draw(canvas, bg, point_t(x,y-1));
+  }
+  if(canvas.match_pixel(x,y+1,bg)){
+    draw(canvas, bg, point_t(x,y+1));
+  }
 }
 
 //---------------------
@@ -155,6 +171,19 @@ color_t canvas_t::get_pixel(int x, int y){
         return *((color_t*)&pixels[3*(w*gl_y+gl_x)]);
     else
         return color_t(0.0f,0.0f,0.0f);
+}
+
+bool canvas_t::match_pixel(int x, int y, color_t c){
+    int gl_x = x, gl_y = h-y;
+    if(gl_x>=0 && gl_x<w && gl_y>=0 && gl_y<h){
+        color_t pc = *((color_t*)&pixels[3*(w*gl_y+gl_x)]);
+
+        if(pc.R()==c.R() && pc.G() == c.G() && pc.B() == c.B())
+            return true;
+        else return false;
+    }
+    else
+        return false;
 }
 
 //---------------------
