@@ -82,6 +82,8 @@ void keyboard( unsigned char key, int x, int y ) {
     break;
   case 'C':
     canvas.clear();
+    lpoints.clear();
+    lpcount = 0;
   	glutPostRedisplay();
     break;
     //Ignore all other keypresses
@@ -134,12 +136,8 @@ void mouse(int button, int state, int x, int y)
              lpoints.push_back(point);
 
              if(lpcount == 3){
-                 line_t line1(lpoints.end()[-3], lpoints.end()[-2]);
-                 line_t line2(lpoints.end()[-2], lpoints.end()[-1]);
-                 line_t line3(lpoints.end()[-1], lpoints.end()[-3]);
-                 line1.draw(canvas, pen);
-                 line2.draw(canvas, pen);
-                 line3.draw(canvas, pen);
+                 triangle_t triangle(lpoints.end()[-3], lpoints.end()[-2], lpoints.end()[-1]);
+                 triangle.draw(canvas, pen);
                  lpcount--;
              }
          }

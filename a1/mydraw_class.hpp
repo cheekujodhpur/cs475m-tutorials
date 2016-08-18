@@ -126,9 +126,14 @@ public:
 
 class triangle_t {
 private:
-  ;
+  point_t x1, x2, x3;
 public:
-  ;
+  triangle_t();
+  triangle_t(const point_t x_1,
+            const point_t x_2,
+            const point_t x_3);
+
+  void draw(canvas_t &canvas, pen_t pen);
 };
 
 //------------------------

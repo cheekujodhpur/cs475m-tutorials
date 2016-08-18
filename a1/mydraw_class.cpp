@@ -120,9 +120,7 @@ canvas_t::canvas_t():w(512),h(512),bg(color_t(1.0f,1.0f,1.0f)) {
 }
 
 canvas_t::canvas_t(const int _w, const int _h, const color_t _bg)
-		 :w(_w),h(_h),bg(_bg) { 
-    int size = w*h;
-    pixels = new float[size*3];
+		 :w(_w),h(_h),bg(_bg) { int size = w*h; pixels = new float[size*3];
     clear();
 }
 
@@ -245,6 +243,22 @@ void line_t::draw(canvas_t &canvas, pen_t pen){
 //---------------------
 //-------------------
 //triangle_t methods
+
+triangle_t::triangle_t():x1(point_t()),x2(point_t()),x3(point_t()){}
+
+triangle_t::triangle_t(const point_t _x1,
+                    const point_t _x2,
+                    const point_t _x3){
+    x1 = _x1;
+    x2 = _x2;
+    x3 = _x3;
+}
+
+void triangle_t::draw(canvas_t &canvas, pen_t pen){
+    line_t(x1,x2).draw(canvas, pen);
+    line_t(x2,x3).draw(canvas, pen);
+    line_t(x3,x1).draw(canvas, pen);
+}
 
 
 //---------------------
