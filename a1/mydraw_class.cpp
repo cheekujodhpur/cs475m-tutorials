@@ -173,7 +173,7 @@ color_t canvas_t::get_pixel(int x, int y){
         return color_t(0.0f,0.0f,0.0f);
 }
 
-bool canvas_t::match_pixel(int x, int y, color_t c){
+bool canvas_t::match_pixel(int x, int y, color_t &c){
     int gl_x = x, gl_y = h-y;
     if(gl_x>=0 && gl_x<w && gl_y>=0 && gl_y<h){
         color_t pc = *((color_t*)&pixels[3*(w*gl_y+gl_x)]);
