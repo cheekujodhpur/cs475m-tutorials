@@ -13,4 +13,6 @@ clean:
 mydraw: clean
 	g++ mydraw_class.cpp mydraw.cpp -o $@ $(GLLIBS)
 
+debug: clean
+	g++ -g mydraw_class.cpp mydraw.cpp -o $@ $(GLLIBS)
 
