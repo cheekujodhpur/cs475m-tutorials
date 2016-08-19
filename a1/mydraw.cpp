@@ -19,10 +19,12 @@ int win_width = 512;
 //Window height
 int win_height = 512;
 float r,g,b;
-canvas_t canvas(win_width, win_height, color_t(1.0f, 1.0f, 1.0f));
 pen_t pen;
 color_t bg_color;
 fill_t fill;
+
+canvas_t canvas(win_width, win_height, color_t(1.0f, 1.0f, 1.0f));
+drawing_t *drawing;
 bool fill_flag = false;
 // the modes
 int mode = 0;   //0 means point, 1 means line, 2 means triangle
@@ -83,7 +85,7 @@ void keyboard( unsigned char key, int x, int y ) {
     canvas.set_bg(bg_color);
     break;
   case 'C':
-    canvas.clear();
+    drawing->clear();
     lpoints.clear();
     lpcount = 0;
   	glutPostRedisplay();
@@ -100,6 +102,8 @@ void keyboard( unsigned char key, int x, int y ) {
     std::cout << "Enter new background color (r,g,b): ";
     std::cin >> r >> g >> b;
     canvas = canvas_t(win_width, win_height, color_t(r, g, b));
+    drawing = canvas.Drawing();
+    drawing->attachPen(pen);
   	glutPostRedisplay();
     break;
   case '1':
@@ -132,15 +136,14 @@ void mouse(int button, int state, int x, int y)
 	 {
          point_t point(x, y);
          if(fill_flag){
-             color_t fillbg = canvas.get_pixel(x, y);
-             fill.draw(canvas, fillbg, point);
+             drawing->draw(fill, point);
              fill_flag = false;
              lpcount = 0;
              lpoints.clear();
          }
          // Simple point drawing
          else if(mode==0){
-             point.draw(canvas, pen);
+             drawing->draw(point);
          }
          // Line drawing
          else if(mode == 1){
@@ -149,7 +152,7 @@ void mouse(int button, int state, int x, int y)
 
              if(lpcount == 2){
                  line_t line(lpoints.end()[-2], lpoints.end()[-1]);
-                 line.draw(canvas, pen);
+                 drawing->draw(line);
                  lpcount--;
              }
          }
@@ -159,7 +162,7 @@ void mouse(int button, int state, int x, int y)
 
              if(lpcount == 3){
                  triangle_t triangle(lpoints.end()[-3], lpoints.end()[-2], lpoints.end()[-1]);
-                 triangle.draw(canvas, pen);
+                 drawing->draw(triangle);
                  lpcount--;
              }
          }
@@ -171,6 +174,9 @@ void mouse(int button, int state, int x, int y)
 
 int main (int argc, char *argv[]) 
 {
+  //somehow can't do this globally
+  drawing = canvas.Drawing();
+  drawing->attachPen(pen);
 
   glutInit( &argc, argv );
   glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );

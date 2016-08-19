@@ -138,14 +138,14 @@ void point_t::draw(canvas_t &canvas, pen_t pen){
 canvas_t::canvas_t():w(512),h(512),bg(color_t(1.0f,1.0f,1.0f)) {
     int size = w*h;
     pixels = new float[size*3];
-    clear();
     drawing = new drawing_t(*this);
+    drawing->clear();
 }
 
 canvas_t::canvas_t(const int _w, const int _h, const color_t _bg)
 		 :w(_w),h(_h),bg(_bg) { int size = w*h; pixels = new float[size*3];
-    clear();
     drawing = new drawing_t(*this);
+    drawing->clear();
 }
 
 void canvas_t::set_bg(color_t _bg){
@@ -163,6 +163,7 @@ float* canvas_t::Pixels(void){return pixels;}
 int canvas_t::W(void){return w;}
 int canvas_t::H(void){return h;}
 color_t canvas_t::BG(void){return bg;}
+drawing_t* canvas_t::Drawing(void){return drawing;}
 
 int canvas_t::set_pixel(int x, int y, color_t c){
     int gl_x = x, gl_y = h-y;
@@ -300,6 +301,36 @@ void triangle_t::draw(canvas_t &canvas, pen_t pen){
 
 //---------------------
 //-------------------
+//shape_t methods
+
+shape_t::shape_t(color_t &_bg){
+    mode = 4;
+    bg = _bg;
+}
+shape_t::shape_t(point_t &_point, pen_t &_pen){
+    mode = 0;
+    point = _point;
+    pen = _pen;
+}
+shape_t::shape_t(line_t &_line, pen_t &_pen){
+    mode = 1;
+    line = _line;
+    pen = _pen;
+}
+shape_t::shape_t(triangle_t &_triangle, pen_t &_pen){
+    mode = 2;
+    triangle = _triangle;
+    pen = _pen;
+}
+shape_t::shape_t(point_t &_point, fill_t &_fill){
+    mode = 3;
+    point = _point;
+    fill = _fill;
+}
+
+//---------------------
+
+//-------------------
 //drawing_t methods
 
 drawing_t::drawing_t(){}
@@ -312,11 +343,40 @@ void drawing_t::attachCanvas(canvas_t &_canvas){
     canvas = &_canvas;
 }
 
-void drawing_t::draw_point(point_t point){
-}
-void drawing_t::draw_line(line_t line){
-}
-void drawing_t::draw_triangle(triangle_t triangle){
+void drawing_t::attachPen(pen_t &_pen){
+    pen = &_pen;
 }
 
+void drawing_t::draw(point_t &point){
+    shape_t a_new_point(point, *pen);
+    shapes.push(a_new_point);
+    point.draw(*canvas, *pen);
+}
+void drawing_t::draw(line_t &line){
+    shape_t a_new_line(line, *pen);
+    shapes.push(a_new_line);
+    line.draw(*canvas, *pen);
+}
+void drawing_t::draw(triangle_t &triangle){
+    shape_t a_new_triangle(triangle, *pen);
+    shapes.push(a_new_triangle);
+    triangle.draw(*canvas, *pen);
+}
+void drawing_t::draw(fill_t &fill, point_t &seed){
+    int x = seed.X();
+    int y = seed.Y(); 
+    color_t fillbg = canvas->get_pixel(x, y);
+    shape_t a_new_fill(seed, fill);
+    shapes.push(a_new_fill);
+    fill.draw(*canvas, fillbg, seed);
+}
+void drawing_t::clear()
+{
+    color_t bg = canvas->BG();
+    while(!shapes.empty())
+       shapes.pop(); 
+    shape_t full_clear(bg);
+    shapes.push(full_clear);
+    canvas->clear();
+}
 //---------------------

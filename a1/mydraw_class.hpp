@@ -1,3 +1,5 @@
+#include <stack>
+
 #ifndef _MYDRAW_CLASS_HPP_
 #define _MYDRAW_CLASS_HPP_ 
 //Define all classes like the color class, adding appropriate methods and data members. 
@@ -64,6 +66,7 @@ public:
   int W(void);
   int H(void);
   color_t BG(void);
+  drawing_t* Drawing(void);
 
   int set_pixel(int x, int y, color_t c);
   color_t get_pixel(int x, int y);
@@ -141,19 +144,53 @@ public:
 
 //------------------------
 
+//shape class
+
+class shape_t {
+private:
+  point_t point;
+  line_t line;
+  triangle_t triangle;
+  fill_t fill;
+  pen_t pen;
+  color_t bg;
+  /*
+   * 0 - Point
+   * 1 - Line
+   * 2 - Triangle
+   * 3 - Fill
+   * 4 - Clear
+   */
+  int mode;
+public:
+  shape_t(color_t &_bg);
+  shape_t(point_t &_point, pen_t &_pen);
+  shape_t(line_t &_line, pen_t &_pen);
+  shape_t(triangle_t &_triangle, pen_t &_pen);
+  shape_t(point_t &_point, fill_t &_fill);
+};
+
+//------------------------
+
 //drawing_t class
 
 class drawing_t {
 private:
   canvas_t *canvas;
+  pen_t *pen;
+  std::stack <shape_t> shapes;
 public:
   drawing_t();
   drawing_t(canvas_t &_canvas);
   void attachCanvas(canvas_t &_canvas);
+  void attachPen(pen_t &_pen);
 
-  void draw_point(point_t point);
-  void draw_line(line_t line);
-  void draw_triangle(triangle_t triangle);
+  void draw(point_t &point);
+  void draw(line_t &line);
+  void draw(triangle_t &triangle);
+  void draw(fill_t &fill, point_t &seed);
+  //to clear canvas
+  void clear();
 };
 
 //------------------------
