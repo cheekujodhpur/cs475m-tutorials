@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 #include <vector>
 #include <GL/glut.h>
 
@@ -106,6 +107,13 @@ void keyboard( unsigned char key, int x, int y ) {
     drawing->attachPen(pen);
   	glutPostRedisplay();
     break;
+  case 'S':{
+    std::string filename;
+    std::cout << "Enter filename: ";
+    std::cin >> filename; 
+    drawing->save(filename);
+    break;
+    }
   case '1':
     lpoints.clear();
     lpcount = 0;

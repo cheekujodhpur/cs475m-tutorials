@@ -1,5 +1,6 @@
 BIN = mydraw 
 GLLIBS = -lGL -lGLU -lglut
+G = g++ -std=c++11
 
 .SUFFIXES: .cpp .hpp
 
@@ -11,8 +12,8 @@ clean:
 	rm -f *~
 
 mydraw: clean
-	g++ mydraw_class.cpp mydraw.cpp -o $@ $(GLLIBS)
+	$(G) mydraw_class.cpp mydraw.cpp -o $@ $(GLLIBS)
 
 debug: clean
-	g++ -g mydraw_class.cpp mydraw.cpp -o $@ $(GLLIBS)
+	$(G) -g mydraw_class.cpp mydraw.cpp -o $@ $(GLLIBS)
 

@@ -1,4 +1,6 @@
-#include <stack>
+#include <vector>
+#include <fstream>
+#include <string>
 
 #ifndef _MYDRAW_CLASS_HPP_
 #define _MYDRAW_CLASS_HPP_ 
@@ -103,6 +105,7 @@ public:
   fill_t();
   fill_t(const color_t _fc);
 
+  color_t FC(void);
   void set_fc(color_t _fc);
   void draw(canvas_t &canvas, color_t &bg, point_t seed);
 };
@@ -139,6 +142,10 @@ public:
             const point_t x_2,
             const point_t x_3);
 
+  point_t X1(void);
+  point_t X2(void);
+  point_t X3(void);
+
   void draw(canvas_t &canvas, pen_t pen);
 };
 
@@ -146,8 +153,7 @@ public:
 
 //shape class
 
-class shape_t {
-private:
+struct shape_t {
   point_t point;
   line_t line;
   triangle_t triangle;
@@ -162,7 +168,6 @@ private:
    * 4 - Clear
    */
   int mode;
-public:
   shape_t(color_t &_bg);
   shape_t(point_t &_point, pen_t &_pen);
   shape_t(line_t &_line, pen_t &_pen);
@@ -178,7 +183,7 @@ class drawing_t {
 private:
   canvas_t *canvas;
   pen_t *pen;
-  std::stack <shape_t> shapes;
+  std::vector <shape_t> shapes;
 public:
   drawing_t();
   drawing_t(canvas_t &_canvas);
@@ -191,6 +196,8 @@ public:
   void draw(fill_t &fill, point_t &seed);
   //to clear canvas
   void clear();
+
+  void save(std::string filename);
 };
 
 //------------------------

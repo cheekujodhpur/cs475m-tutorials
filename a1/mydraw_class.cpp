@@ -1,5 +1,6 @@
 #include "mydraw_class.hpp"
 #include <stack>
+#include <iostream>
 
 //-------------------
 //color_t methods
@@ -11,7 +12,6 @@ color_t::color_t(const float _r, const float _g, const float _b)
 void color_t::set(const float _r, const float _g, const float _b) { 
   r=_r; g=_g; b=_b;
 }
-
 float color_t::R(void) { return r; }
 float color_t::G(void) { return g; }
 float color_t::B(void) { return b; }
@@ -56,6 +56,8 @@ fill_t::fill_t(const color_t _fc)
 void fill_t::set_fc(color_t _fc){
     fc = _fc;
 }
+
+color_t fill_t::FC(void){return fc;}
 
 void fill_t::draw(canvas_t &canvas, color_t &bg, point_t seed){
 
@@ -298,6 +300,10 @@ void triangle_t::draw(canvas_t &canvas, pen_t pen){
     line_t(x3,x1).draw(canvas, pen);
 }
 
+point_t triangle_t::X1(void){return x1;}
+point_t triangle_t::X2(void){return x2;}
+point_t triangle_t::X3(void){return x3;}
+
 
 //---------------------
 //-------------------
@@ -349,17 +355,17 @@ void drawing_t::attachPen(pen_t &_pen){
 
 void drawing_t::draw(point_t &point){
     shape_t a_new_point(point, *pen);
-    shapes.push(a_new_point);
+    shapes.push_back(a_new_point);
     point.draw(*canvas, *pen);
 }
 void drawing_t::draw(line_t &line){
     shape_t a_new_line(line, *pen);
-    shapes.push(a_new_line);
+    shapes.push_back(a_new_line);
     line.draw(*canvas, *pen);
 }
 void drawing_t::draw(triangle_t &triangle){
     shape_t a_new_triangle(triangle, *pen);
-    shapes.push(a_new_triangle);
+    shapes.push_back(a_new_triangle);
     triangle.draw(*canvas, *pen);
 }
 void drawing_t::draw(fill_t &fill, point_t &seed){
@@ -367,16 +373,70 @@ void drawing_t::draw(fill_t &fill, point_t &seed){
     int y = seed.Y(); 
     color_t fillbg = canvas->get_pixel(x, y);
     shape_t a_new_fill(seed, fill);
-    shapes.push(a_new_fill);
+    shapes.push_back(a_new_fill);
     fill.draw(*canvas, fillbg, seed);
 }
 void drawing_t::clear()
 {
     color_t bg = canvas->BG();
-    while(!shapes.empty())
-       shapes.pop(); 
+    shapes.clear();
     shape_t full_clear(bg);
-    shapes.push(full_clear);
+    shapes.push_back(full_clear);
     canvas->clear();
+}
+
+void drawing_t::save(std::string filename){
+    std::fstream fs;
+    fs.open(filename, std::fstream::out);
+
+    for(int i = 0;i<shapes.size();i++){
+        int mode = shapes[i].mode;
+        //write out mode first
+        fs << mode << " ";
+        if(mode == 4){
+            fs << shapes[i].bg.R() << " " 
+                << shapes[i].bg.G() << " " 
+                << shapes[i].bg.B() << std::endl;
+        } 
+        else if(mode == 0){
+            fs << shapes[i].point.X() << " " 
+                << shapes[i].point.Y() << " "
+                << shapes[i].pen.Color().R() << " "
+                << shapes[i].pen.Color().G() << " "
+                << shapes[i].pen.Color().B() << " "
+                << shapes[i].pen.Size() << std::endl;
+        }
+        else if(mode == 1){
+            fs << shapes[i].line.Start().X() << " " 
+                << shapes[i].line.Start().Y() << " "
+                << shapes[i].line.End().X() << " "
+                << shapes[i].line.End().Y() << " "
+                << shapes[i].pen.Color().R() << " "
+                << shapes[i].pen.Color().G() << " "
+                << shapes[i].pen.Color().B() << " "
+                << shapes[i].pen.Size() << std::endl;
+        }
+        else if(mode == 2){
+            fs << shapes[i].triangle.X1().X() << " " 
+                << shapes[i].triangle.X1().Y() << " "
+                << shapes[i].triangle.X2().X() << " "
+                << shapes[i].triangle.X2().Y() << " "
+                << shapes[i].triangle.X3().X() << " "
+                << shapes[i].triangle.X3().Y() << " "
+                << shapes[i].pen.Color().R() << " "
+                << shapes[i].pen.Color().G() << " "
+                << shapes[i].pen.Color().B() << " "
+                << shapes[i].pen.Size() << std::endl;
+        }
+        else if(mode == 3){
+            fs << shapes[i].point.X() << " "
+                << shapes[i].point.Y() << " "
+                << shapes[i].fill.FC().R() << " "
+                << shapes[i].fill.FC().G() << " "
+                << shapes[i].fill.FC().B() << std::endl;
+        }
+    }
+
+    fs.close();
 }
 //---------------------
