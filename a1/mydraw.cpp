@@ -74,6 +74,9 @@ void keyboard( unsigned char key, int x, int y ) {
     std::cin >> size;
     pen.set_size(size);
     break;
+  case 'E':
+    pen.set_mode(!pen.Mode());
+    break;
   case 'H':
     std::cout << "Enter pen color (r,g,b): ";
     std::cin >> r >> g >> b;

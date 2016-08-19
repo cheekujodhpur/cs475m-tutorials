@@ -404,7 +404,8 @@ void drawing_t::save(std::string filename){
                 << shapes[i].pen.Color().R() << " "
                 << shapes[i].pen.Color().G() << " "
                 << shapes[i].pen.Color().B() << " "
-                << shapes[i].pen.Size() << std::endl;
+                << shapes[i].pen.Size() << " "
+                << shapes[i].pen.Mode() << std::endl;
         }
         else if(mode == 1){
             fs << shapes[i].line.Start().X() << " " 
@@ -414,7 +415,8 @@ void drawing_t::save(std::string filename){
                 << shapes[i].pen.Color().R() << " "
                 << shapes[i].pen.Color().G() << " "
                 << shapes[i].pen.Color().B() << " "
-                << shapes[i].pen.Size() << std::endl;
+                << shapes[i].pen.Size() << " "
+                << shapes[i].pen.Mode() << std::endl;
         }
         else if(mode == 2){
             fs << shapes[i].triangle.X1().X() << " " 
@@ -426,7 +428,8 @@ void drawing_t::save(std::string filename){
                 << shapes[i].pen.Color().R() << " "
                 << shapes[i].pen.Color().G() << " "
                 << shapes[i].pen.Color().B() << " "
-                << shapes[i].pen.Size() << std::endl;
+                << shapes[i].pen.Size() << " "
+                << shapes[i].pen.Mode() << std::endl;
         }
         else if(mode == 3){
             fs << shapes[i].point.X() << " "
@@ -449,18 +452,21 @@ int drawing_t::load(std::string filename){
     float r, g, b;
     int x,y;
     int size;
+    bool pmode;
 
     while(fs >> mode){
         if(mode==4){
             fs >> r >> g >> b;
             canvas->set_bg(color_t(r, g, b));
-            canvas->clear();
+            clear();
         }
         else if(mode == 0){
             fs >> x >> y;
             fs >> r >> g >> b;
-            fs >> size;
-            point_t(x, y).draw(*canvas, pen_t(size, color_t(r, g, b)));
+            fs >> size >> pmode;
+            *pen = pen_t(size, color_t(r, g, b), pmode);
+            point_t point(x, y);
+            draw(point);
         }
         else if(mode == 1){
             fs >> x >> y;
@@ -468,8 +474,10 @@ int drawing_t::load(std::string filename){
             fs >> x >> y;
             point_t end(x,y);
             fs >> r >> g >> b;
-            fs >> size;
-            line_t(start, end).draw(*canvas, pen_t(size, color_t(r, g, b)));
+            fs >> size >> pmode;
+            *pen = pen_t(size, color_t(r, g, b), pmode);
+            line_t line(start, end);
+            draw(line);
         }
         else if(mode == 2){
             fs >> x >> y;
@@ -479,15 +487,17 @@ int drawing_t::load(std::string filename){
             fs >> x >> y;
             point_t x3(x, y);
             fs >> r >> g >> b;
-            fs >> size;
-            triangle_t(x1, x2, x3).draw(*canvas, pen_t(size, color_t(r, g, b))); 
+            fs >> size >> pmode;
+            *pen = pen_t(size, color_t(r, g, b), pmode);
+            triangle_t triangle(x1, x2, x3);
+            draw(triangle);
         }
         else if(mode==3){
             fs >> x >> y;
             point_t seed(x,y);
             fs >> r >> g >> b; 
-            color_t bg = canvas->get_pixel(x, y);
-            fill_t(color_t(r, g, b)).draw(*canvas, bg, seed);
+            fill_t fill(color_t(r, g, b));
+            draw(fill, seed);
         }
     }
 
