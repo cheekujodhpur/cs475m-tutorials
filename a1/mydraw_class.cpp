@@ -139,11 +139,13 @@ canvas_t::canvas_t():w(512),h(512),bg(color_t(1.0f,1.0f,1.0f)) {
     int size = w*h;
     pixels = new float[size*3];
     clear();
+    drawing = new drawing_t(*this);
 }
 
 canvas_t::canvas_t(const int _w, const int _h, const color_t _bg)
 		 :w(_w),h(_h),bg(_bg) { int size = w*h; pixels = new float[size*3];
     clear();
+    drawing = new drawing_t(*this);
 }
 
 void canvas_t::set_bg(color_t _bg){
@@ -301,6 +303,14 @@ void triangle_t::draw(canvas_t &canvas, pen_t pen){
 //drawing_t methods
 
 drawing_t::drawing_t(){}
+
+drawing_t::drawing_t(canvas_t &_canvas){
+    canvas = &_canvas;
+}
+
+void drawing_t::attachCanvas(canvas_t &_canvas){
+    canvas = &_canvas;
+}
 
 void drawing_t::draw_point(point_t point){
 }

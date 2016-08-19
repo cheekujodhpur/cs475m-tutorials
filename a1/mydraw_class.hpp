@@ -42,6 +42,7 @@ public:
   bool Mode(void);
 };
 
+class drawing_t;
 //------------------------
 //canvas_t class
 
@@ -51,6 +52,7 @@ private:
   int h;    //height
   color_t bg;   //background color
   float *pixels;   //storing the pixels
+  drawing_t *drawing;
 public:
   canvas_t();
   canvas_t(const int w, const int h, const color_t _bg);
@@ -143,9 +145,11 @@ public:
 
 class drawing_t {
 private:
-  ;
+  canvas_t *canvas;
 public:
   drawing_t();
+  drawing_t(canvas_t &_canvas);
+  void attachCanvas(canvas_t &_canvas);
 
   void draw_point(point_t point);
   void draw_line(line_t line);

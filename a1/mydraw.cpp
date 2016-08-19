@@ -96,6 +96,12 @@ void keyboard( unsigned char key, int x, int y ) {
     std::cin >> r >> g >> b;
     fill.set_fc(color_t(r, g, b));
 	break;
+  case 'N':
+    std::cout << "Enter new background color (r,g,b): ";
+    std::cin >> r >> g >> b;
+    canvas = canvas_t(win_width, win_height, color_t(r, g, b));
+  	glutPostRedisplay();
+    break;
   case '1':
     lpoints.clear();
     lpcount = 0;
