@@ -198,6 +198,7 @@ public:
   void clear();
 
   void save(std::string filename);
+  int load(std::string filename);
 };
 
 //------------------------

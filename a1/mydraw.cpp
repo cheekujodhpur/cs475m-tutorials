@@ -114,6 +114,16 @@ void keyboard( unsigned char key, int x, int y ) {
     drawing->save(filename);
     break;
     }
+  case 'L':{
+    std::string filename;
+    std::cout << "Enter filename: ";
+    std::cin >> filename; 
+    if(!drawing->load(filename))
+        std::cout << "Invalid filename"
+            << std::endl;
+  	glutPostRedisplay();
+    break;
+    }
   case '1':
     lpoints.clear();
     lpcount = 0;

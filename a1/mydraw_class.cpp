@@ -439,4 +439,59 @@ void drawing_t::save(std::string filename){
 
     fs.close();
 }
+int drawing_t::load(std::string filename){
+    std::fstream fs;
+    fs.open(filename, std::fstream::in);
+    if(!fs)
+        return 0;
+
+    int mode;
+    float r, g, b;
+    int x,y;
+    int size;
+
+    while(fs >> mode){
+        if(mode==4){
+            fs >> r >> g >> b;
+            canvas->set_bg(color_t(r, g, b));
+            canvas->clear();
+        }
+        else if(mode == 0){
+            fs >> x >> y;
+            fs >> r >> g >> b;
+            fs >> size;
+            point_t(x, y).draw(*canvas, pen_t(size, color_t(r, g, b)));
+        }
+        else if(mode == 1){
+            fs >> x >> y;
+            point_t start(x,y);
+            fs >> x >> y;
+            point_t end(x,y);
+            fs >> r >> g >> b;
+            fs >> size;
+            line_t(start, end).draw(*canvas, pen_t(size, color_t(r, g, b)));
+        }
+        else if(mode == 2){
+            fs >> x >> y;
+            point_t x1(x, y);
+            fs >> x >> y;
+            point_t x2(x, y);
+            fs >> x >> y;
+            point_t x3(x, y);
+            fs >> r >> g >> b;
+            fs >> size;
+            triangle_t(x1, x2, x3).draw(*canvas, pen_t(size, color_t(r, g, b))); 
+        }
+        else if(mode==3){
+            fs >> x >> y;
+            point_t seed(x,y);
+            fs >> r >> g >> b; 
+            color_t bg = canvas->get_pixel(x, y);
+            fill_t(color_t(r, g, b)).draw(*canvas, bg, seed);
+        }
+    }
+
+    fs.close();
+    return 1;
+}
 //---------------------
