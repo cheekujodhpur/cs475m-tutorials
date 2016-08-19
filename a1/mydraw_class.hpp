@@ -199,6 +199,7 @@ public:
 
   void save(std::string filename);
   int load(std::string filename);
+  void pop(void);
 };
 
 //------------------------

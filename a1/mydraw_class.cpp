@@ -494,4 +494,11 @@ int drawing_t::load(std::string filename){
     fs.close();
     return 1;
 }
+
+void drawing_t::pop(void){
+    if(shapes.size()>1)
+    {
+        shapes.pop_back();
+    }
+}
 //---------------------

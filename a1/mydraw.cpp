@@ -92,7 +92,7 @@ void keyboard( unsigned char key, int x, int y ) {
   	glutPostRedisplay();
     break;
   case 'F':
-    fill_flag = true;
+    fill_flag = !fill_flag;
     break;
   case 'G':
     std::cout << "Enter fill color (r,g,b): ";
@@ -155,7 +155,6 @@ void mouse(int button, int state, int x, int y)
          point_t point(x, y);
          if(fill_flag){
              drawing->draw(fill, point);
-             fill_flag = false;
              lpcount = 0;
              lpoints.clear();
          }
@@ -185,6 +184,30 @@ void mouse(int button, int state, int x, int y)
              }
          }
 	 }
+       if (button == GLUT_RIGHT_BUTTON) {
+           if(mode==1){
+             if(lpoints.size()>1)
+                drawing->pop();
+             if(!lpoints.empty())
+                 lpoints.pop_back();
+             if(lpoints.empty()){
+                   lpcount = 0;
+             }
+           }
+           else if(mode==2){
+             if(lpoints.size()>2)
+                drawing->pop();
+             if(!lpoints.empty())
+                 lpoints.pop_back();
+             if(lpoints.size()<2){
+                   lpcount = lpoints.size();
+             }
+           }
+           else
+               drawing->pop();
+           drawing->save("tmp.dat");
+           drawing->load("tmp.dat");
+       }
      }
    glutPostRedisplay();
 }       
