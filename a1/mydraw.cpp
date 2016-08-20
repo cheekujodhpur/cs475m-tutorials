@@ -16,9 +16,9 @@
 #include "mydraw_class.hpp"
 
 //Window width
-int win_width = 1024;
+int win_width = 512;
 //Window height
-int win_height = 768;
+int win_height = 512;
 float r,g,b;
 pen_t pen;
 color_t bg_color;
