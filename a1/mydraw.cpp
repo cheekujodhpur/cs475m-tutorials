@@ -16,9 +16,9 @@
 #include "mydraw_class.hpp"
 
 //Window width
-int win_width = 512;
+int win_width = 1024;
 //Window height
-int win_height = 512;
+int win_height = 640;
 float r,g,b;
 pen_t pen;
 color_t bg_color;
@@ -26,7 +26,6 @@ fill_t fill;
 
 canvas_t canvas(win_width, win_height, color_t(1.0f, 1.0f, 1.0f));
 drawing_t *drawing;
-bool fill_flag = false;
 // the modes
 int mode = 0;   //0 means point, 1 means line, 2 means triangle
 std::vector<point_t> lpoints;
@@ -95,7 +94,11 @@ void keyboard( unsigned char key, int x, int y ) {
   	glutPostRedisplay();
     break;
   case 'F':
-    fill_flag = !fill_flag;
+    if(mode==3){
+        mode = 0;
+    }
+    else mode = 3;
+    break;
     break;
   case 'G':
     std::cout << "Enter fill color (r,g,b): ";
@@ -156,7 +159,7 @@ void mouse(int button, int state, int x, int y)
        if (button == GLUT_LEFT_BUTTON) 
 	 {
          point_t point(x, y);
-         if(fill_flag){
+         if(mode==3){
              drawing->draw(fill, point);
              lpcount = 0;
              lpoints.clear();
