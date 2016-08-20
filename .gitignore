@@ -1,3 +1,7 @@
+# Program generated data files #
+################################
+*.dat
+
 # Compiled source #
 ###################
 *.com
