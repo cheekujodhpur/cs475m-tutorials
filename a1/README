@@ -1,7 +1,6 @@
 To compile type "make."
 
-The provided makefile is very rudimentary. You can improve it if you want.
+The documentation is provided at
+http://cheekujodhpur.github.io/75dos/assignment/graphics/2016/08/20/cs475m-a1/
 
-All class must be added to mydraw_class.hpp and mydraw_class.cpp.
-
-All opengl and glut code goes in mydraw.cpp, except that used in the canvas draw method which will be a part of the canvas_t class implementation.
+The image of the indoor scene in steps is provided in the folder 'data'
