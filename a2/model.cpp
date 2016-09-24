@@ -53,10 +53,26 @@ Vec supremo(0.0,0.0,0.0);
 void display(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  //big rod
   drawCylinder(3.2, 0.2, Vec(0.0, 0.5, 0.0), Vec(-15.0, 0.0, 0.0));
+  //middle top rod
   drawCylinder(4.5, 0.15, Vec(0.0, -1.9, -0.3), Vec(60.0, 0.0, 0.0));
+  //middle bottom rod
   drawCylinder(4.5, 0.15, Vec(0.0,-1.55, 1.15) , Vec(85.0, 0.0, 0.0));
-  drawCylinder(4.5, 0.15, supremo, Vec(85.0, 0.0, 0.0));
+  //front rod
+  drawCylinder(1.7, 0.2, Vec(0.0, -3.95, 1.0), Vec(-17.0, 0.0, 0.0));
+
+  //back top rods
+  drawCylinder(1.1, 0.11, Vec(-0.15,1.2,1.1) , Vec(50.0, 10.0, 0.0));
+  drawCylinder(1.1, 0.11, Vec(0.15,1.2,1.1) , Vec(50.0, -10.0, 0.0));
+  drawCylinder(3.7, 0.11, Vec(-0.25,2.95,-0.35), Vec(50.0, 0.0, 0.0));
+  drawCylinder(3.7, 0.11, Vec(0.25,2.95,-0.35), Vec(50.0, 0.0, 0.0));
+
+  //back bottom rods
+  drawCylinder(1.1, 0.11, Vec(-0.15,0.65,-1.5) , Vec(90.0, 10.0, 0.0));
+  drawCylinder(1.1, 0.11, Vec(0.15,0.65,-1.5) , Vec(90.0, -10.0, 0.0));
+  drawCylinder(3.3, 0.11, Vec(0.25, 2.75, -1.5), Vec(90.0, 0.0, 0.0));
+  drawCylinder(3.3, 0.11, Vec(-0.25, 2.75, -1.5), Vec(90.0, 0.0, 0.0));
 
   glutSwapBuffers();
 }
