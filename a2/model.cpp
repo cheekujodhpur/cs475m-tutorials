@@ -48,11 +48,41 @@ void drawCylinder(double height, double radius, Vec trans, Vec rot){
   glPopMatrix();
 }
 
+void drawTorus(double width, double radius, Vec trans, Vec rot){
+  int num = 100;
+
+  double Step = 2.0 * M_PI / num;
+  int i, j;
+
+  glPushMatrix();
+
+  glTranslatef(trans.x, trans.y, trans.z);
+  glRotatef(rot.x, 1.0, 0.0, 0.0);
+  glRotatef(rot.y, 0.0, 1.0, 0.0);
+  glRotatef(rot.z, 0.0, 0.0, 1.0);
+
+  for (i = 0; i < num; ++i) {
+        double theta = i*Step;
+
+      glBegin(GL_TRIANGLE_STRIP);
+      for (j = 0; j <= num; ++j) {
+          double phi = j * Step;
+          glVertex3f((radius-width*sin(phi))*cos(theta),(radius-width*sin(phi))*sin(theta), width*cos(phi));
+          glColor3f(0.8,0.1,0.8);
+          glVertex3f((radius-width*sin(phi))*cos(theta+Step),(radius-width*sin(phi))*sin(theta+Step), width*cos(phi));
+          glColor3f(0.8,0.1,0.8);
+      }
+      glEnd();
+  }
+  glPopMatrix();
+}
+
 Vec supremo(0.0,0.0,0.0);
 
 void display(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  
   //big rod
   drawCylinder(3.2, 0.2, Vec(0.0, 0.5, 0.0), Vec(-15.0, 0.0, 0.0));
   //middle top rod
@@ -73,6 +103,10 @@ void display(void)
   drawCylinder(1.1, 0.11, Vec(0.15,0.65,-1.5) , Vec(90.0, -10.0, 0.0));
   drawCylinder(3.3, 0.11, Vec(0.25, 2.75, -1.5), Vec(90.0, 0.0, 0.0));
   drawCylinder(3.3, 0.11, Vec(-0.25, 2.75, -1.5), Vec(90.0, 0.0, 0.0));
+  
+
+  drawTorus(0.1,1.875, Vec(0.0,4.35, -1.5), Vec(0.0,90,0.0));
+  drawCylinder(1.875, 0.02, supremo, Vec(90.0, 0.0, 0.0));
 
   glutSwapBuffers();
 }
