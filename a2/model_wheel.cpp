@@ -7,8 +7,7 @@ using namespace std;
 struct Vec {
   double x, y, z; Vec(double x_=0, double y_=0, double z_=0){ x=x_; y=y_; z=z_; } Vec operator+(const Vec &b) const { return Vec(x+b.x,y+b.y,z+b.z); }
   Vec operator-(const Vec &b) const { return Vec(x-b.x,y-b.y,z-b.z); }
-  Vec operator*(double b) const { return Vec(x*b,y*b,z*b); }
-  Vec mult(const Vec &b) const { return Vec(x*b.x,y*b.y,z*b.z); }
+  Vec operator*(double b) const { return Vec(x*b,y*b,z*b); } Vec mult(const Vec &b) const { return Vec(x*b.x,y*b.y,z*b.z); }
   Vec& norm(){ return *this = *this * (1/sqrt(x*x+y*y+z*z)); }
   double dot(const Vec &b) const { return x*b.x+y*b.y+z*b.z; } // cross:
   Vec operator%(Vec&b){return Vec(y*b.z-z*b.y,z*b.x-x*b.z,x*b.y-y*b.x);}
@@ -78,34 +77,71 @@ void drawTorus(double width, double radius, Vec trans, Vec rot){
 }
 
 Vec supremo(0.0,0.0,0.0);
+Vec eye(9.0 ,0.0, 0.0);
+Vec up(0.0, 0.0, 1.0);
 
 void display(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity(); 
+  gluLookAt(eye.x, eye.y, eye.z,  // eye is at (0,0,8)
+  0.0, 0.0, 0.0,      // center is at (0,0,0)
+  up.x, up.y, up.z);      // up is in positive Y direction
+
   drawTorus(0.1,1.875, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0));
   drawCylinder(1.875, 0.02, supremo, Vec(90.0, 0.0, 0.0));
 
   glutSwapBuffers();
 }
 
-void processSpecialKeys(int key, int x, int y) {
+//Our function for processing ASCII keys
+void processNormalKeys(unsigned char key, int x, int y) {
   switch(key) {
-    case GLUT_KEY_LEFT :
-    supremo.y -= 0.05;
-    break;
-    case GLUT_KEY_RIGHT :
-    supremo.y += 0.05;
-    break;
-    case GLUT_KEY_UP :
-    supremo.z += 0.05;
-    break;
-    case GLUT_KEY_DOWN :
-    supremo.z -= 0.05;
-    break;
-    case GLUT_KEY_PAGE_UP:
+    case 'w':
+      supremo.z += 0.05;
+      break;
+    case 's':
+      supremo.z -= 0.05;
+      break;
+    case 'a':
+      supremo.y -= 0.05;
+      break;
+    case 'd':
+      supremo.y += 0.05;
+      break;
+    case 'q':
+      supremo.x += 0.05;
+      break;
+    case 'e':
+      supremo.x -= 0.05;
+      break;
+    case 'p':
     cout << supremo.x << " " << supremo.y << " " << supremo.z << endl; 
     break;
+    case 'v':
+    if(eye.x==0){
+        eye.x = 9.0;
+        eye.z = 0.0;
+        up.x = 0.0;
+        up.z = 1.0;
+    }
+    else if(eye.x==9.0){
+        eye.x = 0.0;
+        eye.z = 9.0;
+        up.x = -1.0;
+        up.z = 0.0;
+    }
+    break;
+  }
+  if (key == 27)
+  exit(0);
+
+  glutPostRedisplay();
+}
+
+void processSpecialKeys(int key, int x, int y) {
+  switch(key) {
   }
   //Redraw
   glutPostRedisplay();
@@ -133,6 +169,7 @@ int main(int argc, char **argv)
   glutInitWindowSize(700,700);
   glutCreateWindow("Assignment 2");
   glutDisplayFunc(display);
+  glutKeyboardFunc(processNormalKeys);
   glutSpecialFunc(processSpecialKeys);
   init();
   glutMainLoop();
