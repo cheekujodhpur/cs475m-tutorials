@@ -196,3 +196,13 @@ void drawFrame(){
   drawCylinder(3.3, 0.11, Vec(0.25, 2.75, -1.5), Vec(90.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
   drawCylinder(3.3, 0.11, Vec(-0.25, 2.75, -1.5), Vec(90.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
 }
+
+void drawSeat(){
+  Seat seat(0.66,1.5,0.25,0.75,0.15);
+  seat.draw();
+  glPushMatrix();
+  glRotatef(-75,0.0,1.0,0.0);
+  glTranslatef(-0.5,0.0,.7);
+  drawCylinder(1.5,0.18,Vec(0.0,0.0,0.0),Vec(0.0,0.0,0.0),Vec(0.0,0.85,0.1));
+  glPopMatrix();
+}

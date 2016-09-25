@@ -26,3 +26,4 @@ struct Seat{
 
 void drawWheel();
 void drawFrame();
+void drawSeat();

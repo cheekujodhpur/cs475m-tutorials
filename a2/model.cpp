@@ -12,6 +12,9 @@ Vec up(0.0, 0.0, 1.0);
 //back wheel angle parameter
 double theta = 0;
 
+//seat paramter
+double seat_height = 2.35;
+
 void display(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -35,12 +38,12 @@ void display(void)
     glPushMatrix();
     glRotatef(90,1.0,0.0,0.0);
     glRotatef(90,0.0,0.0,1.0);
-    glPushMatrix();
+
     glRotatef(15,0.0,1.0,0.0);
-    glTranslatef(supremo.x,supremo.y,supremo.z);
+    glTranslatef(seat_height,0.0,0.0);
     glRotatef(-15,0.0,1.0,0.0);
+
     drawSeat();
-    glPopMatrix();
     glPopMatrix();
   glPopMatrix();
 
@@ -101,6 +104,16 @@ void processNormalKeys(unsigned char key, int x, int y) {
 	eye.x = 0.0;
     }  
     break;
+
+    //seat height
+    case 'h':
+        if(seat_height>2.05)
+            seat_height-=0.05;
+        break;
+    case 'H':
+        if(seat_height<2.95)
+            seat_height+=0.05;
+        break;
   }
   if (key == 27)
   exit(0);

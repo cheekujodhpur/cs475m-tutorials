@@ -194,8 +194,9 @@ void display(void)
   Seat seat(2.0,4.0,0.5,1.5,0.5);
   seat.draw();
   glPushMatrix();
-  glRotatef(-97.0,0.0,1.0,0.0);
-  drawCylinder(5.0,0.5,Vec(0.0,0.0,4.0),Vec(0.0,0.0,0.0));
+  glRotatef(-75,0.0,1.0,0.0);
+  glTranslatef(-0.7,0.0,2.7);
+  drawCylinder(5.0,0.5,Vec(0.0,0.0,0.0),Vec(0.0,0.0,0.0));
   glPopMatrix();
 
   glutSwapBuffers();
