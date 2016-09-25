@@ -13,7 +13,7 @@ struct Vec {
   Vec operator%(Vec&b){return Vec(y*b.z-z*b.y,z*b.x-x*b.z,x*b.y-y*b.x);}
 };
 
-void drawCylinder(double height, double radius, Vec trans, Vec rot){
+void drawCylinder(double height, double radius, Vec trans, Vec rot, Vec color){
     int numMajor = 100;
     int numMinor = 100;
 
@@ -38,16 +38,16 @@ void drawCylinder(double height, double radius, Vec trans, Vec rot){
           GLfloat x = radius * cos(a);
           GLfloat y = radius * sin(a);
           glVertex3f(x, y, z0);
-          glColor3f(0.0,0.1,0.8);
+          glColor3f(color.x,color.y,color.z);
           glVertex3f(x, y, z1);
-          glColor3f(0.0,0.1,0.8);
+          glColor3f(color.x,color.y,color.z);
       }
       glEnd();
   }
   glPopMatrix();
 }
 
-void drawTorus(double width, double radius, Vec trans, Vec rot){
+void drawTorus(double width, double radius, Vec trans, Vec rot, Vec color){
   int num = 100;
 
   double Step = 2.0 * M_PI / num;
@@ -67,9 +67,9 @@ void drawTorus(double width, double radius, Vec trans, Vec rot){
       for (j = 0; j <= num; ++j) {
           double phi = j * Step;
           glVertex3f((radius-width*sin(phi))*cos(theta),(radius-width*sin(phi))*sin(theta), width*cos(phi));
-          glColor3f(0.8,0.1,0.8);
+          glColor3f(color.x,color.y,color.z);
           glVertex3f((radius-width*sin(phi))*cos(theta+Step),(radius-width*sin(phi))*sin(theta+Step), width*cos(phi));
-          glColor3f(0.8,0.1,0.8);
+          glColor3f(color.x,color.y,color.z);
       }
       glEnd();
   }
@@ -89,8 +89,19 @@ void display(void)
   0.0, 0.0, 0.0,      // center is at (0,0,0)
   up.x, up.y, up.z);      // up is in positive Y direction
 
-  drawTorus(0.1,1.875, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0));
-  drawCylinder(1.875, 0.02, supremo, Vec(90.0, 0.0, 0.0));
+  drawTorus(0.1,1.875, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0), Vec(0.1,0.1,0.1));
+  drawTorus(0.075,1.7, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0), Vec(0.7,0.7,0.7));
+  drawCylinder(0.4, 0.1, Vec(0.0,0.0,0.0), Vec(0.0, 90.0, 0.0), Vec(0.7,0.7,0.7));
+  for(int x=0;x<10;x++){
+    glPushMatrix();
+    glRotatef(36*x,1.0,0.0,0.0);
+    drawCylinder(1.65, 0.02, Vec(0.075,0.825,0.0), Vec(90.0,5.2, 0.0), Vec(0.7,0.7,0.7));
+    glPopMatrix();
+    glPushMatrix();
+    glRotatef(36*x+18,1.0,0.0,0.0);
+    drawCylinder(1.65, 0.02, Vec(-0.075,0.825,0.0), Vec(90.0, -5.2, 0.0), Vec(0.7,0.7,0.7));
+    glPopMatrix();	
+  }	
 
   glutSwapBuffers();
 }
@@ -122,8 +133,10 @@ void processNormalKeys(unsigned char key, int x, int y) {
     case 'v':
     if(eye.x==0){
         eye.x = 9.0;
-        eye.z = 0.0;
+        eye.y = 0.0;
+	eye.z = 0.0;
         up.x = 0.0;
+	up.y = 0.0;
         up.z = 1.0;
     }
     else if(eye.x==9.0){
@@ -132,6 +145,20 @@ void processNormalKeys(unsigned char key, int x, int y) {
         up.x = -1.0;
         up.z = 0.0;
     }
+    break;
+    case 'k':
+    if(eye.x==0){
+	eye.x = 9.0;
+	eye.z = 0.0;
+	eye.y = 0.0;	
+	up.x = 0.0;
+	up.y = 0.0;
+	up.z = 1.0;
+    }
+    else if(eye.x=9.0){
+	eye.y = 9.0;
+	eye.x = 0.0;
+    }  
     break;
   }
   if (key == 27)

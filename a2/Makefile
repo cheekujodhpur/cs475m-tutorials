@@ -1,7 +1,7 @@
 CC = g++
 LIBS = -lGL -lglut -lGLU -lm 
 
-SRC = model_frame.cpp
+SRC = model_wheel.cpp
 BIN = model
 
 all	:	$(BIN)
