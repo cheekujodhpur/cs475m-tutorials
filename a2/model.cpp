@@ -21,13 +21,26 @@ void display(void)
   0.0, 0.0, 0.0,      // center is at (0,0,0)
   up.x, up.y, up.z);      // up is in positive Y direction
 
-  //start drawing frame and wheel
+  //start drawing frame 
   glPushMatrix();
   drawFrame();
+    // draw back wheel
     glPushMatrix();
     glTranslatef(0,4.25,-1.5);
     glRotatef(theta,1.0,0.0,0.0);
     drawWheel();
+    glPopMatrix();
+
+    // draw seat
+    glPushMatrix();
+    glRotatef(90,1.0,0.0,0.0);
+    glRotatef(90,0.0,0.0,1.0);
+    glPushMatrix();
+    glRotatef(15,0.0,1.0,0.0);
+    glTranslatef(supremo.x,supremo.y,supremo.z);
+    glRotatef(-15,0.0,1.0,0.0);
+    drawSeat();
+    glPopMatrix();
     glPopMatrix();
   glPopMatrix();
 
