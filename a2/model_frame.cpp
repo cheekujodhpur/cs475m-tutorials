@@ -105,9 +105,6 @@ void display(void)
   drawCylinder(3.3, 0.11, Vec(-0.25, 2.75, -1.5), Vec(90.0, 0.0, 0.0));
   
 
-  drawTorus(0.1,1.875, Vec(0.0,4.35, -1.5), Vec(0.0,90,0.0));
-  drawCylinder(1.875, 0.02, supremo, Vec(90.0, 0.0, 0.0));
-
   glutSwapBuffers();
 }
 
