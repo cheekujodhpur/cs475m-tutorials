@@ -11,7 +11,7 @@ struct Vec {
 };
 
 void drawCylinder(double height, double radius, Vec trans, Vec rot, Vec color);
-void drawTorus(double width, double radius, Vec trans, Vec rot, Vec color);
+void drawTorus(double width, double radius, Vec trans, Vec rot, Vec color,double total);
 
 struct Seat{
     double th, bh; //top height, bottom height
@@ -25,5 +25,7 @@ struct Seat{
 };
 
 void drawWheel();
+void drawFrontWheel();
 void drawFrame();
 void drawSeat();
+void drawHandle(double phi);

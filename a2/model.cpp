@@ -11,6 +11,10 @@ Vec up(0.0, 0.0, 1.0);
 
 //back wheel angle parameter
 double theta = 0;
+//front wheel angle parameter
+double phi = 0;
+//front handle angle parameter
+double theta2 = 0;
 
 //seat paramter
 double seat_height = 2.35;
@@ -44,6 +48,14 @@ void display(void)
     glRotatef(-15,0.0,1.0,0.0);
 
     drawSeat();
+    glPopMatrix();
+
+    //draw front rod
+    glPushMatrix();
+    glTranslatef(0.0,-3.9,1.15);
+    glRotatef(-17.0, 1.0, 0.0, 0.0);
+    glRotatef(theta2, 0.0, 0.0, 1.0);
+    drawHandle(phi);
     glPopMatrix();
   glPopMatrix();
 
@@ -100,7 +112,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
 	up.z = 1.0;
     }
     else if(eye.x=9.0){
-	eye.y = 9.0;
+	eye.y = -9.0;
 	eye.x = 0.0;
     }  
     break;
@@ -128,6 +140,18 @@ void processSpecialKeys(int key, int x, int y) {
           break;
       case GLUT_KEY_DOWN:
           theta -= 0.5;
+          break;
+      case GLUT_KEY_LEFT:
+          phi -= 0.5;
+          break;
+      case GLUT_KEY_RIGHT:
+          phi += 0.5;
+          break;
+      case GLUT_KEY_PAGE_UP:
+          theta2 += 0.5;
+          break;
+      case GLUT_KEY_PAGE_DOWN:
+          theta2 -= 0.5;
           break;
   }
   //Redraw

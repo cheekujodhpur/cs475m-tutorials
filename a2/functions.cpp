@@ -132,10 +132,11 @@ void drawCylinder(double height, double radius, Vec trans, Vec rot, Vec color){
 }
 
 // torus drawing
-void drawTorus(double width, double radius, Vec trans, Vec rot, Vec color){
+void drawTorus(double width, double radius, Vec trans, Vec rot, Vec color, double total=2.0*M_PI){
   int num = 100;
 
-  double Step = 2.0 * M_PI / num;
+  double Step = total / num;
+  double smallStep = 2.0*M_PI / num;
   int i, j;
 
   glPushMatrix();
@@ -150,7 +151,7 @@ void drawTorus(double width, double radius, Vec trans, Vec rot, Vec color){
 
       glBegin(GL_TRIANGLE_STRIP);
       for (j = 0; j <= num; ++j) {
-          double phi = j * Step;
+          double phi = j * smallStep;
           glVertex3f((radius-width*sin(phi))*cos(theta),(radius-width*sin(phi))*sin(theta), width*cos(phi));
           glColor3f(color.x,color.y,color.z); glVertex3f((radius-width*sin(phi))*cos(theta+Step),(radius-width*sin(phi))*sin(theta+Step), width*cos(phi)); glColor3f(color.x,color.y,color.z); } glEnd();
   }
@@ -170,6 +171,22 @@ void drawWheel(){
     glPushMatrix();
     glRotatef(36*x+18,1.0,0.0,0.0);
     drawCylinder(1.65, 0.02, Vec(-0.02,0.825,0.0), Vec(90.0, -5.2, 0.0), Vec(0.7,0.7,0.7));
+    glPopMatrix();	
+  }	
+}
+
+void drawFrontWheel(){
+  drawTorus(0.2,1.18, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0), Vec(0.1,0.1,0.1));
+  drawTorus(0.17,1.1, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0), Vec(0.7,0.7,0.7));
+  drawCylinder(0.64, 0.15, Vec(0.0,0.0,0.0), Vec(0.0, 90.0, 0.0), Vec(0.7,0.0,0.0));
+  for(int x=0;x<10;x++){
+    glPushMatrix();
+    glRotatef(36*x,1.0,0.0,0.0);
+    drawCylinder(1.05, 0.02, Vec(0.15,0.625,0.0), Vec(90.0,9.2, 0.0), Vec(0.7,0.7,0.7));
+    glPopMatrix();
+    glPushMatrix();
+    glRotatef(36*x+18,1.0,0.0,0.0);
+    drawCylinder(1.05, 0.02, Vec(-0.15,0.625,0.0), Vec(90.0, -9.2, 0.0), Vec(0.7,0.7,0.7));
     glPopMatrix();	
   }	
 }
@@ -205,4 +222,23 @@ void drawSeat(){
   glTranslatef(-0.5,0.0,.7);
   drawCylinder(1.5,0.18,Vec(0.0,0.0,0.0),Vec(0.0,0.0,0.0),Vec(0.0,0.85,0.1));
   glPopMatrix();
+}
+
+void drawHandle(double phi){
+    glPushMatrix();
+    drawCylinder(3.0,0.18, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.5,0.2,0.7));
+        glPushMatrix();
+        glTranslatef(0.0,0.0,-1.5);
+        drawTorus(0.18,0.5, Vec(0.0,0.0, -0.5), Vec(90.0,0,0.0), Vec(0.7,0.0,0.0),M_PI);
+            glPushMatrix();
+            drawCylinder(1.3, 0.175, Vec(0.5,0.00,-1.15), Vec(0.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
+            drawCylinder(1.3, 0.175, Vec(-0.5,0.00,-1.15), Vec(0.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
+                glPushMatrix();
+                glTranslatef(0.0,0.0,-1.65);
+                glRotatef(phi,1.0,0.0,0.0);
+                drawFrontWheel();
+                glPopMatrix();
+            glPopMatrix();
+        glPopMatrix();
+    glPopMatrix();
 }
