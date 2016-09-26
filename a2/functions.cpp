@@ -8,8 +8,7 @@ void Seat::drawTop(){
       glColor3f(1.0,1.0,1.0);
 
       glVertex3f(d,bw,-bh);
-      glColor3f(1.0,1.0,1.0);
-      
+      glColor3f(1.0,1.0,1.0); 
       glVertex3f(d,-tw,th);
       glColor3f(1.0,1.0,1.0);
       
@@ -237,6 +236,24 @@ void drawHandle(double phi){
                 glTranslatef(0.0,0.0,-1.65);
                 glRotatef(phi,1.0,0.0,0.0);
                 drawFrontWheel();
+                glPopMatrix();
+            glPopMatrix();
+        glPopMatrix();
+        //drawing hand handle
+        glPushMatrix();
+            glTranslatef(0.0,0.5,1.5); 
+            glRotatef(90,0.0,1.0,0.0);
+            glRotatef(180.0,0.0,0.0,1.0);
+            glPushMatrix();
+            drawTorus(0.18,0.5, Vec(0.0,0.0, 0.0), Vec(00.0,0,0.0), Vec(0.7,0.0,0.0),M_PI/2);
+            drawCylinder(0.8,0.18, Vec(0.5,-0.4,0.0), Vec(90.0,0.0,0.0), Vec(0.5,0.2,0.7));
+            //draw hand hand handle
+                glPushMatrix();
+                    glTranslatef(0.5,-0.8,0.0);
+                    glRotatef(90,0.0,0.0,1.0);
+                    drawCylinder(3.6,0.18, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.7,0.0,0.7));
+                    drawCylinder(0.8,0.20, Vec(0.0,0.0,1.4), Vec(0.0,0.0,0.0), Vec(0.7,0.7,0.7));
+                    drawCylinder(0.8,0.20, Vec(0.0,0.0,-1.4), Vec(0.0,0.0,0.0), Vec(0.7,0.7,0.7));
                 glPopMatrix();
             glPopMatrix();
         glPopMatrix();

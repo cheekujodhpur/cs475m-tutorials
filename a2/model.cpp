@@ -57,6 +57,7 @@ void display(void)
     glRotatef(theta2, 0.0, 0.0, 1.0);
     drawHandle(phi);
     glPopMatrix();
+
   glPopMatrix();
 
   glutSwapBuffers();
