@@ -15,6 +15,8 @@ double theta = 0;
 double phi = 0;
 //front handle angle parameter
 double theta2 = 0;
+//pedal angle paramter
+double phi2 = 30;
 
 //seat paramter
 double seat_height = 2.35;
@@ -50,12 +52,20 @@ void display(void)
     drawSeat();
     glPopMatrix();
 
-    //draw front rod
+    //draw handle
     glPushMatrix();
     glTranslatef(0.0,-3.9,1.15);
     glRotatef(-17.0, 1.0, 0.0, 0.0);
     glRotatef(theta2, 0.0, 0.0, 1.0);
     drawHandle(phi);
+    glPopMatrix();
+
+    //draw pedals
+    glPushMatrix();
+    glTranslatef(0.0,0.15,-1.30);
+    glRotatef(90,0.0,1.0,0.0);
+    glRotatef(phi2,0.0,0.0,1.0);
+    drawPedals(phi2);
     glPopMatrix();
 
   glPopMatrix();
@@ -91,9 +101,9 @@ void processNormalKeys(unsigned char key, int x, int y) {
     if(eye.x==0){
         eye.x = 9.0;
         eye.y = 0.0;
-	eye.z = 0.0;
+	    eye.z = 0.0;
         up.x = 0.0;
-	up.y = 0.0;
+	    up.y = 0.0;
         up.z = 1.0;
     }
     else if(eye.x==9.0){
@@ -113,7 +123,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
 	up.z = 1.0;
     }
     else if(eye.x=9.0){
-	eye.y = -9.0;
+	eye.y = 9.0;
 	eye.x = 0.0;
     }  
     break;
@@ -126,6 +136,14 @@ void processNormalKeys(unsigned char key, int x, int y) {
     case 'H':
         if(seat_height<2.95)
             seat_height+=0.05;
+        break;
+
+    //pedal angle
+    case 'x':
+        phi2 -= 2.5;
+        break;
+    case 'X':
+        phi2 += 2.5;
         break;
   }
   if (key == 27)

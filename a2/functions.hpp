@@ -29,3 +29,5 @@ void drawFrontWheel();
 void drawFrame();
 void drawSeat();
 void drawHandle(double phi);
+void drawBox(double a, double b, double c, Vec color);
+void drawPedals(double phi2);

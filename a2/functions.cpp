@@ -259,3 +259,94 @@ void drawHandle(double phi){
         glPopMatrix();
     glPopMatrix();
 }
+
+void drawBox(double a, double b, double c, Vec color)
+{
+    glBegin(GL_TRIANGLE_STRIP);
+        glVertex3f(a,b,c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(a,b,-c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(a,-b,c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(a,-b,-c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(-a,-b,c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(-a,-b,-c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(-a,b,-c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(-a,b,c);
+        glColor3f(color.x, color.y, color.z);
+
+    glEnd();
+    glBegin(GL_TRIANGLE_STRIP);
+
+        glVertex3f(a,-b,c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(-a,-b,c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(a,b,c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(-a,b,c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(a,b,-c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(-a,b,-c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(-a,-b,-c);
+        glColor3f(color.x, color.y, color.z);
+
+        glVertex3f(a,-b,-c);
+        glColor3f(color.x, color.y, color.z);
+
+    glEnd();
+}
+
+void drawPedals(double phi2){
+    drawCylinder(1.6,0.18, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.0,0.1,0.7));
+        //pedal rods
+        glPushMatrix();
+        glTranslatef(0.0,0.0,-0.8);
+        glRotatef(60,0.0,1.0,0.0);
+        glTranslatef(0.0,0.0,-0.4);
+        drawCylinder(1.0,0.13, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.7,0.0,0.1));
+            //pedal shafts
+            glPushMatrix();
+            glTranslatef(0.0,0.0,-0.5);
+            glRotatef(-60,0.0,1.0,0.0);
+            glTranslatef(0.0,0.0,-0.3);
+            glRotatef(-phi2,0.0,0.0,1.0);
+            drawBox(0.1,0.25,0.45,Vec(1.0,1.0,1.0));
+            glPopMatrix();
+        glPopMatrix();
+
+        glPushMatrix();
+        glTranslatef(0.0,0.0,0.8);
+        glRotatef(60,0.0,1.0,0.0);
+        glTranslatef(0.0,0.0,0.4);
+        drawCylinder(1.0,0.13, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.7,0.0,0.1));
+            //pedal shafts
+            glPushMatrix();
+            glTranslatef(0.0,0.0,0.5);
+            glRotatef(-60,0.0,1.0,0.0);
+            glTranslatef(0.0,0.0,0.3);
+            glRotatef(-phi2,0.0,0.0,1.0);
+            drawBox(0.1,0.25,0.45,Vec(1.0,1.0,1.0));
+            glPopMatrix();
+        glPopMatrix();
+}
