@@ -67,8 +67,13 @@ void display(void)
     glRotatef(phi2,0.0,0.0,1.0);
     drawPedals(phi2);
     glPopMatrix();
-
-  glPopMatrix();
+    
+    //draw chain
+    glPushMatrix();
+    glRotatef(90,1.0,0.0,0.0);
+    drawCylinder(4.114,0.03, Vec(0.148,-0.94,-2.2), Vec(-6,2.165,27.324), Vec(0.1,0.9,0.1));
+    drawCylinder(4.114,0.03, Vec(0.148,-1.85,-2.2), Vec(1,2.165,-27.324), Vec(0.1,0.9,0.1));
+    glPopMatrix();
 
   glutSwapBuffers();
 }
@@ -123,7 +128,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
 	up.z = 1.0;
     }
     else if(eye.x=9.0){
-	eye.y = 9.0;
+	eye.y = -9.0;
 	eye.x = 0.0;
     }  
     break;

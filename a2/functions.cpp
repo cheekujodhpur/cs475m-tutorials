@@ -130,7 +130,81 @@ void drawCylinder(double height, double radius, Vec trans, Vec rot, Vec color){
   glPopMatrix();
 }
 
-// torus drawing
+//gear drawing(solid cylinder)
+void drawDisk(double height, double radius,double tooth_width, double tooth_height, Vec trans, Vec rot, Vec color){
+    int numMajor = 100;
+    int numMinor = 100;
+
+  double majorStep = height / numMajor;
+  double minorStep = 2.0 * M_PI / numMinor;
+  int i, j;
+
+  glPushMatrix();
+
+  glTranslatef(trans.x, trans.y, trans.z);
+  glRotatef(rot.x, 1.0, 0.0, 0.0);
+  glRotatef(rot.y, 0.0, 1.0, 0.0);
+  glRotatef(rot.z, 0.0, 0.0, 1.0);
+
+  for (i = 0; i < numMajor; ++i) {
+      GLfloat z0 = 0.5 * height - i * majorStep;
+      GLfloat z1 = z0 - majorStep;
+
+      glBegin(GL_TRIANGLE_STRIP);
+      for (j = 0; j <= numMinor; ++j) {
+          double a = j * minorStep;
+          GLfloat x = radius * cos(a);
+          GLfloat y = radius * sin(a);
+          glVertex3f(x, y, z0);
+          glColor3f(color.x,color.y,color.z);
+          glVertex3f(x, y, z1);
+          glColor3f(color.x,color.y,color.z);
+      }
+      glEnd();
+  }
+      for (j=0; j<= numMinor; ++j) {
+          double a = j * minorStep ;
+          double next_a = ( j + 1 ) * minorStep;
+          glBegin(GL_TRIANGLE_STRIP);
+          glVertex3f(0,0,height/2);
+          glColor3f(color.x,color.y,color.z);
+          glVertex3f(radius*cos(a),radius*sin(a),height/2);
+          glColor3f(color.x,color.y,color.z);
+          glVertex3f(radius*cos(next_a),radius*sin(next_a),height/2);
+          glColor3f(color.x,color.y,color.z);
+          glEnd();
+          glBegin(GL_TRIANGLE_STRIP);
+          glVertex3f(0,0,-height/2);
+          glColor3f(color.x,color.y,color.z);
+          glVertex3f(radius*cos(a),radius*sin(a),-height/2);
+          glColor3f(color.x,color.y,color.z);
+          glVertex3f(radius*cos(a),radius*sin(a),-height/2);
+          glColor3f(color.x,color.y,color.z);
+     }
+     for (j=0; j<=15; ++j){
+          double a = j * 2.0 * M_PI / 15;
+          double b = tooth_width / radius;
+          glBegin(GL_TRIANGLE_STRIP);
+          glVertex3f(radius*cos(a-b),radius*sin(a-b),height/2);
+          glColor3f(color.x,color.y,color.z);
+          glVertex3f(radius*cos(a+b),radius*sin(a+b),height/2);
+          glColor3f(color.x,color.y,color.z);
+          glVertex3f((radius+tooth_height)*cos(a),(radius+tooth_height)*sin(a),0);
+          glColor3f(color.x,color.y,color.z);
+          glVertex3f(radius*cos(a+b),radius*sin(a+b),-height/2);
+          glColor3f(color.x,color.y,color.z);
+          glVertex3f(radius*cos(a-b),radius*sin(a-b),-height/2);
+          glColor3f(color.x,color.y,color.z);
+          glVertex3f((radius+tooth_height)*cos(a),(radius+tooth_height)*sin(a),0);
+          glColor3f(color.x,color.y,color.z);
+          glVertex3f(radius*cos(a-b),radius*sin(a-b),height/2);
+          glColor3f(color.x,color.y,color.z);
+          glEnd();
+  }
+  glPopMatrix();
+}
+
+//torus drawing
 void drawTorus(double width, double radius, Vec trans, Vec rot, Vec color, double total=2.0*M_PI){
   int num = 100;
 
@@ -162,6 +236,9 @@ void drawWheel(){
   drawTorus(0.08,1.875, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0), Vec(0.1,0.1,0.1));
   drawTorus(0.075,1.7, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0), Vec(0.7,0.7,0.7));
   drawCylinder(0.28, 0.1, Vec(0.0,0.0,0.0), Vec(0.0, 90.0, 0.0), Vec(0.7,0.0,0.0));
+  //Back gear disk
+  drawDisk(0.05, 0.3,0.06,0.1, Vec(0.08,0.0,0.0), Vec(0.0, 90.0, 0.0), Vec(1,1,1));
+  
   for(int x=0;x<10;x++){
     glPushMatrix();
     glRotatef(36*x,1.0,0.0,0.0);
@@ -318,7 +395,13 @@ void drawBox(double a, double b, double c, Vec color)
 }
 
 void drawPedals(double phi2){
+        //front gear disk
+	glPushMatrix();
+        drawDisk(0.1, 0.5,0.07,0.1, Vec(0.0,0.0,0.21), Vec(0.0, 0.0, 0.0), Vec(1,1,1));
+	glPopMatrix();
+
     drawCylinder(1.6,0.18, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.0,0.1,0.7));
+       
         //pedal rods
         glPushMatrix();
         glTranslatef(0.0,0.0,-0.8);
