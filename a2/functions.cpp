@@ -2,43 +2,25 @@
 
 void Seat::drawTop(){
       glBegin(GL_TRIANGLE_STRIP);
+
       glVertex3f(d,bw,0.0);
-      glColor3f(1.0,1.0,1.0); 
       glVertex3f(d,tw,th);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(d,bw,-bh);
-      glColor3f(1.0,1.0,1.0); 
       glVertex3f(d,-tw,th);
-      glColor3f(1.0,1.0,1.0);
-      
       glVertex3f(d,-bw,-bh);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(d,-bw,0.0);
-      glColor3f(1.0,1.0,1.0);
 
       glEnd();
     }
 void Seat::drawBottom(){
       glBegin(GL_TRIANGLE_STRIP);
+
       glVertex3f(-d,bw,0.0);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(-d,tw,th);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(-d,bw,-bh);
-      glColor3f(1.0,1.0,1.0);
-      
       glVertex3f(-d,-tw,th);
-      glColor3f(1.0,1.0,1.0);
-      
       glVertex3f(-d,-bw,-bh);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(-d,-bw,0.0);
-      glColor3f(1.0,1.0,1.0);
 
       glEnd();
     }
@@ -46,47 +28,24 @@ void Seat::drawSides(){
       glBegin(GL_TRIANGLE_STRIP);
 
       glVertex3f(d,bw,0.0);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(-d,bw,0.0);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(d,bw,-bh);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(-d,bw,-bh);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(d,-bw,-bh);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(-d,-bw,-bh);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(d,-bw,0.0);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(-d,-bw,0.0);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(d,-tw,th);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(-d,-tw,th);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(d,tw,th);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(-d,tw,th);
-      glColor3f(1.0,1.0,1.0);
-
       glVertex3f(d,bw,0.0);
-      glColor3f(1.0,1.0,1.0);
 
       glEnd();
     }
 void Seat::draw(){
+        glColor3f(1.0,1.0,1.0);
+
         glPushMatrix();
         drawTop();
         drawBottom();
@@ -104,6 +63,8 @@ void drawCylinder(double height, double radius, Vec trans, Vec rot, Vec color){
   double minorStep = 2.0 * M_PI / numMinor;
   int i, j;
 
+  glColor3f(color.x,color.y,color.z);
+
   glPushMatrix();
 
   glTranslatef(trans.x, trans.y, trans.z);
@@ -121,9 +82,7 @@ void drawCylinder(double height, double radius, Vec trans, Vec rot, Vec color){
           GLfloat x = radius * cos(a);
           GLfloat y = radius * sin(a);
           glVertex3f(x, y, z0);
-          glColor3f(color.x,color.y,color.z);
           glVertex3f(x, y, z1);
-          glColor3f(color.x,color.y,color.z);
       }
       glEnd();
   }
@@ -139,6 +98,8 @@ void drawDisk(double height, double radius,double tooth_width, double tooth_heig
   double minorStep = 2.0 * M_PI / numMinor;
   int i, j;
 
+  glColor3f(color.x,color.y,color.z);
+
   glPushMatrix();
 
   glTranslatef(trans.x, trans.y, trans.z);
@@ -156,9 +117,7 @@ void drawDisk(double height, double radius,double tooth_width, double tooth_heig
           GLfloat x = radius * cos(a);
           GLfloat y = radius * sin(a);
           glVertex3f(x, y, z0);
-          glColor3f(color.x,color.y,color.z);
           glVertex3f(x, y, z1);
-          glColor3f(color.x,color.y,color.z);
       }
       glEnd();
   }
@@ -167,38 +126,25 @@ void drawDisk(double height, double radius,double tooth_width, double tooth_heig
           double next_a = ( j + 1 ) * minorStep;
           glBegin(GL_TRIANGLE_STRIP);
           glVertex3f(0,0,height/2);
-          glColor3f(color.x,color.y,color.z);
           glVertex3f(radius*cos(a),radius*sin(a),height/2);
-          glColor3f(color.x,color.y,color.z);
           glVertex3f(radius*cos(next_a),radius*sin(next_a),height/2);
-          glColor3f(color.x,color.y,color.z);
           glEnd();
           glBegin(GL_TRIANGLE_STRIP);
           glVertex3f(0,0,-height/2);
-          glColor3f(color.x,color.y,color.z);
           glVertex3f(radius*cos(a),radius*sin(a),-height/2);
-          glColor3f(color.x,color.y,color.z);
           glVertex3f(radius*cos(a),radius*sin(a),-height/2);
-          glColor3f(color.x,color.y,color.z);
      }
      for (j=0; j<=15; ++j){
           double a = j * 2.0 * M_PI / 15;
           double b = tooth_width / radius;
           glBegin(GL_TRIANGLE_STRIP);
           glVertex3f(radius*cos(a-b),radius*sin(a-b),height/2);
-          glColor3f(color.x,color.y,color.z);
           glVertex3f(radius*cos(a+b),radius*sin(a+b),height/2);
-          glColor3f(color.x,color.y,color.z);
           glVertex3f((radius+tooth_height)*cos(a),(radius+tooth_height)*sin(a),0);
-          glColor3f(color.x,color.y,color.z);
           glVertex3f(radius*cos(a+b),radius*sin(a+b),-height/2);
-          glColor3f(color.x,color.y,color.z);
           glVertex3f(radius*cos(a-b),radius*sin(a-b),-height/2);
-          glColor3f(color.x,color.y,color.z);
           glVertex3f((radius+tooth_height)*cos(a),(radius+tooth_height)*sin(a),0);
-          glColor3f(color.x,color.y,color.z);
           glVertex3f(radius*cos(a-b),radius*sin(a-b),height/2);
-          glColor3f(color.x,color.y,color.z);
           glEnd();
   }
   glPopMatrix();
@@ -211,6 +157,8 @@ void drawTorus(double width, double radius, Vec trans, Vec rot, Vec color, doubl
   double Step = total / num;
   double smallStep = 2.0*M_PI / num;
   int i, j;
+
+  glColor3f(color.x,color.y,color.z); 
 
   glPushMatrix();
 
@@ -226,7 +174,9 @@ void drawTorus(double width, double radius, Vec trans, Vec rot, Vec color, doubl
       for (j = 0; j <= num; ++j) {
           double phi = j * smallStep;
           glVertex3f((radius-width*sin(phi))*cos(theta),(radius-width*sin(phi))*sin(theta), width*cos(phi));
-          glColor3f(color.x,color.y,color.z); glVertex3f((radius-width*sin(phi))*cos(theta+Step),(radius-width*sin(phi))*sin(theta+Step), width*cos(phi)); glColor3f(color.x,color.y,color.z); } glEnd();
+          glVertex3f((radius-width*sin(phi))*cos(theta+Step),(radius-width*sin(phi))*sin(theta+Step), width*cos(phi)); 
+      } 
+      glEnd();
   }
   glPopMatrix();
 }
@@ -339,57 +289,30 @@ void drawHandle(double phi){
 
 void drawBox(double a, double b, double c, Vec color)
 {
+    glColor3f(color.x, color.y, color.z);
+
     glBegin(GL_TRIANGLE_STRIP);
+
         glVertex3f(a,b,c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(a,b,-c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(a,-b,c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(a,-b,-c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(-a,-b,c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(-a,-b,-c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(-a,b,-c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(-a,b,c);
-        glColor3f(color.x, color.y, color.z);
 
     glEnd();
     glBegin(GL_TRIANGLE_STRIP);
 
         glVertex3f(a,-b,c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(-a,-b,c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(a,b,c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(-a,b,c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(a,b,-c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(-a,b,-c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(-a,-b,-c);
-        glColor3f(color.x, color.y, color.z);
-
         glVertex3f(a,-b,-c);
-        glColor3f(color.x, color.y, color.z);
 
     glEnd();
 }
