@@ -75,6 +75,8 @@ void display(void)
     drawCylinder(4.114,0.03, Vec(0.148,-1.85,-2.2), Vec(1,2.165,-27.324), Vec(0.1,0.9,0.1));
     glPopMatrix();
 
+  glPopMatrix();
+
   glutSwapBuffers();
 }
 
