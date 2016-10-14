@@ -299,8 +299,8 @@ void drawBox(double a, double b, double c, Vec color)
         glVertex3f(a,-b,-c);
         glVertex3f(-a,-b,c);
         glVertex3f(-a,-b,-c);
-        glVertex3f(-a,b,-c);
         glVertex3f(-a,b,c);
+        glVertex3f(-a,b,-c);
 
     glEnd();
     glBegin(GL_TRIANGLE_STRIP);
@@ -311,8 +311,8 @@ void drawBox(double a, double b, double c, Vec color)
         glVertex3f(-a,b,c);
         glVertex3f(a,b,-c);
         glVertex3f(-a,b,-c);
-        glVertex3f(-a,-b,-c);
         glVertex3f(a,-b,-c);
+        glVertex3f(-a,-b,-c);
 
     glEnd();
 }

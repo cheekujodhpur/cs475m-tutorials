@@ -21,17 +21,7 @@ double phi2 = 30;
 //seat paramter
 double seat_height = 2.35;
 
-void display(void)
-{
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity(); 
-  gluLookAt(eye.x, eye.y, eye.z,  // eye is at (0,0,8)
-  0.0, 0.0, 0.0,      // center is at (0,0,0)
-  up.x, up.y, up.z);      // up is in positive Y direction
-
-  //start drawing frame 
-  glPushMatrix();
+void drawCycle(){
   drawFrame();
     // draw back wheel
     glPushMatrix();
@@ -75,6 +65,25 @@ void display(void)
     drawCylinder(4.114,0.03, Vec(0.148,-1.85,-2.2), Vec(1,2.165,-27.324), Vec(0.1,0.9,0.1));
     glPopMatrix();
 
+}
+
+void display(void)
+{
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity(); 
+  gluLookAt(eye.x, eye.y, eye.z,  // eye is at (0,0,8)
+  0.0, 0.0, 0.0,      // center is at (0,0,0)
+  up.x, up.y, up.z);      // up is in positive Y direction
+
+  //draw the room
+  glPushMatrix();
+    drawBox(10,10,10,Vec(0.5,0.5,0.5));
+  glPopMatrix();
+
+  //draw the cycle
+  glPushMatrix();
+    drawCycle();
   glPopMatrix();
 
   glutSwapBuffers();
