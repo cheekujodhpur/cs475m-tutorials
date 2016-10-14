@@ -322,7 +322,7 @@ void init(void)
 	glLightfv(GL_LIGHT2, GL_SPECULAR, specularLight2);
 	glLightfv(GL_LIGHT2, GL_POSITION, position2);
     glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, 15.0);
-	glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.05);
+	glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.01);
 
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
