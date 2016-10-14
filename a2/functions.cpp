@@ -356,3 +356,36 @@ void drawPedals(double phi2){
             glPopMatrix();
         glPopMatrix();
 }
+
+void drawRoom(){
+    glColor3f(0.5,0.5,0.5);
+
+    glBegin(GL_TRIANGLE_STRIP);
+
+//        glVertex3f(a,b,c);
+//        glVertex3f(a,b,-c);
+//        glVertex3f(a,-b,c);
+//        glVertex3f(a,-b,-c);
+//        glVertex3f(-a,-b,c);
+//        glVertex3f(-a,-b,-c);
+//        glVertex3f(-a,b,c);
+//        glVertex3f(-a,b,-c);
+
+    glEnd();
+
+//        glVertex3f(a,-b,c);
+//        glVertex3f(-a,-b,c);
+//        glVertex3f(a,b,c);
+//        glVertex3f(-a,b,c);
+//        glVertex3f(a,b,-c);
+    //drawFloor
+    glBegin(GL_TRIANGLE_STRIP);
+        double a = 10;
+        double b = 10;
+        glVertex3f(-a,b,-5);
+        glVertex3f(-a,-b,-5);
+        glVertex3f(a,b,-5);
+        glVertex3f(a,-b,-5);
+
+    glEnd();
+}

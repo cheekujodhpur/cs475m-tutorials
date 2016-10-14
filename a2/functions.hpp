@@ -32,3 +32,4 @@ void drawHandle(double phi);
 void drawBox(double a, double b, double c, Vec color);
 void drawPedals(double phi2);
 void drawDisk(double height, double radius,double tooth_width, double tooth_height, Vec trans, Vec rot, Vec color);
+void drawRoom();
