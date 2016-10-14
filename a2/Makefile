@@ -1,7 +1,7 @@
 CC = g++
 LIBS = -lGL -lglut -lGLU -lm 
 
-SRC = model.cpp functions.cpp
+SRC = model.cpp functions.cpp 
 BIN = model
 
 all	:	$(BIN)

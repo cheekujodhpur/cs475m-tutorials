@@ -21,21 +21,32 @@ Vec eye(9.0 ,0.0, 0.0);
 Vec up(0.0, 0.0, 1.0);
 
 //back wheel angle parameter
-//double theta = 0;
+double theta = 0;
 //front wheel angle parameter
-//double phi = 0;
+double phi = 0;
 //front handle angle parameter
 double theta2 = 0;
 //pedal angle paramter
 double phi2 = 30;
 
+double fcrot=0;
+double fctrax=0;
+double fctray=0;
+
 double ln_axle = 9.05;
 double ds_front = 4.8;
 
-inline double theta(double x){
-    return 1.5*x;
+void update_params(float delta_phi2, float theta2)
+{
+    theta += 1.5 * delta_phi2 * (180.0/M_PI);
+    float bw = 2.8725 * delta_phi2;
+    float fw = (bw-ln_axle)*cos(theta2) + sqrt(ln_axle*ln_axle + bw*(2*ln_axle-bw)*sin(theta2)*sin(theta2));
+    phi += (fw*180.0)/(1.28*M_PI);
+    fcrot += asin(fw*sin(theta2*(M_PI/180.0))/ln_axle);
+    fctrax += fw*sin(theta2*(M_PI/180.0)) - ds_front*sin(fcrot);
+    fctray += fw*cos(theta2*(M_PI/180.0)) + ds_front*(1-cos(fcrot));  
 }
-inline double bw(double x){
+/*inline double bw(double x){
     return 1.915*theta(x)*(M_PI/180.0);
 }
 inline double fw(double x){
@@ -53,7 +64,7 @@ inline double fctrax(double x){
 inline double fctray(double x){
     return bw(x);
 }
-
+*/
 //seat paramter
 double seat_height = 2.35;
 
@@ -65,7 +76,7 @@ void drawCycle(){
     // draw back wheel
     glPushMatrix();
     glTranslatef(0,4.25,-1.5);
-    glRotatef(theta(phi2),1.0,0.0,0.0);
+    glRotatef(theta,1.0,0.0,0.0);
     drawWheel(wheelTexture);
     glPopMatrix();
 
@@ -86,7 +97,7 @@ void drawCycle(){
     glTranslatef(0.0,-3.9,1.15);
     glRotatef(-17.0, 1.0, 0.0, 0.0);
     glRotatef(theta2, 0.0, 0.0, 1.0);
-    drawHandle(phi(phi2),wheelTexture);
+    drawHandle(phi,wheelTexture);
     glPopMatrix();
 
     //draw pedals
@@ -126,8 +137,8 @@ void display(void)
 
   //draw the cycle
   glPushMatrix();
-    //glTranslatef(fctrax(phi2),fctray(phi2),0);
-    //glRotatef(fcrot(phi2)*(180/M_PI),0.0,0.0,1.0);
+    glTranslatef(fctrax,fctray,0);
+    glRotatef(fcrot*(180/M_PI),0.0,0.0,1.0);
     drawCycle();
   glPopMatrix();
 
@@ -205,9 +216,11 @@ void processNormalKeys(unsigned char key, int x, int y) {
     //pedal angle
     case 'x':
         phi2 -= 2.5;
+        update_params(-2.5*M_PI/180,theta2);
         break;
     case 'X':
         phi2 += 2.5;
+        update_params(+2.5*M_PI/180,theta2);
         break;
 
     //light
