@@ -10,26 +10,51 @@ Vec eye(9.0 ,0.0, 0.0);
 Vec up(0.0, 0.0, 1.0);
 
 //back wheel angle parameter
-double theta = 0;
+//double theta = 0;
 //front wheel angle parameter
-double phi = 0;
+//double phi = 0;
 //front handle angle parameter
 double theta2 = 0;
 //pedal angle paramter
 double phi2 = 30;
+
+double ln_axle = 9.05;
+double ds_front = 4.8;
+
+inline double theta(double x){
+    return 1.5*x;
+}
+inline double bw(double x){
+    return 1.915*theta(x)*(M_PI/180.0);
+}
+inline double fw(double x){
+    return ((bw(x)-ln_axle)*cos(theta2*(M_PI/180.0)) + sqrt(ln_axle*ln_axle + bw(x)*(2*ln_axle-bw(x))*sin(theta2*(M_PI/180.0))*sin(theta2*(M_PI/180.0))));
+}
+inline double phi(double x){
+    return fw(x)/1.28;
+}
+inline double fcrot(double x){
+    asin(fw(x)*cos(theta2*(M_PI/180.0))/ln_axle);
+}
+inline double fctrax(double x){
+    return fw(x)*cos(theta2*(M_PI/180.0)) - ds_front*sin(fcrot(x));
+}
+inline double fctray(double x){
+    return bw(x);
+}
 
 //seat paramter
 double seat_height = 2.35;
 
 void drawCycle(){
   float colorBlue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
-  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorBlue);
+  //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorBlue);
 
   drawFrame();
     // draw back wheel
     glPushMatrix();
     glTranslatef(0,4.25,-1.5);
-    glRotatef(theta,1.0,0.0,0.0);
+    glRotatef(theta(phi2),1.0,0.0,0.0);
     drawWheel();
     glPopMatrix();
 
@@ -50,7 +75,7 @@ void drawCycle(){
     glTranslatef(0.0,-3.9,1.15);
     glRotatef(-17.0, 1.0, 0.0, 0.0);
     glRotatef(theta2, 0.0, 0.0, 1.0);
-    drawHandle(phi);
+    drawHandle(phi(phi2));
     glPopMatrix();
 
     //draw pedals
@@ -81,14 +106,17 @@ void display(void)
 
   //draw the room
   float colorGrey[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGrey);
+ // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGrey);
 
   glPushMatrix();
-    drawBox(10,10,10,Vec(0.5,0.5,0.5));
+    glTranslatef(0.0, 0.0, 1.55);
+    drawRoom();
   glPopMatrix();
 
   //draw the cycle
   glPushMatrix();
+    glTranslatef(fctrax(phi2),fctray(phi2),0);
+    glRotatef(fcrot(phi2)*(180/M_PI),0.0,0.0,1.0);
     drawCycle();
   glPopMatrix();
 
@@ -177,16 +205,16 @@ void processNormalKeys(unsigned char key, int x, int y) {
 void processSpecialKeys(int key, int x, int y) {
   switch(key) {
       case GLUT_KEY_UP:
-          theta += 0.5;
+ //         theta += 0.5;
           break;
       case GLUT_KEY_DOWN:
-          theta -= 0.5;
+ //         theta -= 0.5;
           break;
       case GLUT_KEY_LEFT:
-          phi -= 0.5;
+ //         phi -= 0.5;
           break;
       case GLUT_KEY_RIGHT:
-          phi += 0.5;
+ //         phi += 0.5;
           break;
       case GLUT_KEY_PAGE_UP:
           theta2 += 0.5;
@@ -223,8 +251,8 @@ int main(int argc, char **argv)
   glutDisplayFunc(display);
   glutKeyboardFunc(processNormalKeys);
   glutSpecialFunc(processSpecialKeys);
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
+//  glEnable(GL_LIGHTING);
+//  glEnable(GL_LIGHT0);
    
   //Create light components
   GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
