@@ -13,6 +13,7 @@ GLuint paintTexture;
 
 //lights
 bool roomLights = true;
+bool headLights = false;
 
 //for debugging
 Vec supremo(0.0,0.0,0.0);
@@ -125,8 +126,8 @@ void display(void)
 
   //draw the cycle
   glPushMatrix();
-    glTranslatef(fctrax(phi2),fctray(phi2),0);
-    glRotatef(fcrot(phi2)*(180/M_PI),0.0,0.0,1.0);
+    //glTranslatef(fctrax(phi2),fctray(phi2),0);
+    //glRotatef(fcrot(phi2)*(180/M_PI),0.0,0.0,1.0);
     drawCycle();
   glPopMatrix();
 
@@ -184,19 +185,21 @@ void processNormalKeys(unsigned char key, int x, int y) {
 	up.z = 1.0;
     }
     else if(eye.x=9.0){
-	eye.y = -9.0;
+	eye.y = 9.0;
 	eye.x = 0.0;
     }  
     break;
 
     //seat height
-    case 'h':
-        if(seat_height>2.05)
-            seat_height-=0.05;
-        break;
     case 'H':
-        if(seat_height<2.95)
-            seat_height+=0.05;
+        if(headLights){
+            glDisable(GL_LIGHT2);
+            headLights = !headLights; 
+        }
+        else{
+            glEnable(GL_LIGHT2);
+            headLights = !headLights;
+        }
         break;
 
     //pedal angle
@@ -292,7 +295,7 @@ void init(void)
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight0);
 	glLightfv(GL_LIGHT0, GL_POSITION, position0);
 
-	// GL_LIGHT1: the red light emitting light source
+	// GL_LIGHT1: the fixture on wall
 	// Create light components for GL_LIGHT1
 	float ambientLight1[] = { 0.8f, 0.8f, 1.0f, 1.0f };
 	float diffuseLight1[] = { 0.8f, 0.8f, 1.0f, 1.0f };
@@ -304,6 +307,22 @@ void init(void)
 	glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight1);
 	glLightfv(GL_LIGHT1, GL_POSITION, position1);
 	glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.005);
+
+	// GL_LIGHT1: the red light emitting light source
+	// Create light components for GL_LIGHT1
+	float ambientLight2[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float diffuseLight2[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float specularLight2[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float position2[] = {0.0f,0.0f,0.0f,1.0f};
+    GLfloat hldir[] = {0.0f,-1.0f,0.0f};
+    glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, hldir);
+	// Assign created components to GL_LIGHT1
+	glLightfv(GL_LIGHT2, GL_AMBIENT, ambientLight2);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuseLight2);
+	glLightfv(GL_LIGHT2, GL_SPECULAR, specularLight2);
+	glLightfv(GL_LIGHT2, GL_POSITION, position2);
+    glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, 15.0);
+	glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.05);
 
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);

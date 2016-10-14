@@ -291,6 +291,14 @@ void drawSeat(){
 void drawHandle(double phi,GLuint texture){
     glPushMatrix();
     drawCylinder(3.0,0.18, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.5,0.2,0.7));
+        //draw headlight
+        glPushMatrix();
+        GLfloat hlpos[] = {0.0f,-1.0f,0.0f,1.0f};
+        GLfloat hldir[] = {0.0f,-1.0f,-0.1f};
+        glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, hldir);
+        glLightfv(GL_LIGHT2, GL_POSITION, hlpos);
+        glPopMatrix();
+
         glPushMatrix();
         glTranslatef(0.0,0.0,-1.5);
         drawTorus(0.18,0.5, Vec(0.0,0.0, -0.5), Vec(90.0,0,0.0), Vec(0.7,0.0,0.0),M_PI);
@@ -397,27 +405,35 @@ void drawPedals(double phi2){
 
 void drawRoom(GLuint texture, GLuint texture1, GLuint texture2, GLuint texture3, bool roomLights){
     glColor3f(0.5,0.5,0.5);
+    float colorWhite[] = { 1.0f, 0.0f, 1.0f, 1.0f };
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorWhite);
+
+        double a = 10;
+        double b = 10;
+        double c = 5;
+
+        int num = 10;
+        float istep = a/num;
+        float jstep = b/num;
+        float kstep = c/num;
+        float tistep = 1/(2.0*num);
+        float tjstep = 1/(2.0*num);
+        float tkstep = 1/(2.0*num);
 
     //drawFloor
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glBegin(GL_TRIANGLE_STRIP);
-        double a = 10;
-        double b = 10;
+        for(int j = -num;j<num+1;j++){
+            glBegin(GL_TRIANGLE_STRIP);
+            for(int i = -num;i<=num;i++){
+                glTexCoord2f(0.5+tistep*i,0.5+tjstep*j);
+                glVertex3f(istep*i, jstep*j, -5);
 
-        glTexCoord2d(0.0,1.0);
-        glVertex3f(-a,b,-5);
-
-        glTexCoord2d(0.0,0.0);
-        glVertex3f(-a,-b,-5);
-
-        glTexCoord2d(1.0,1.0);
-        glVertex3f(a,b,-5);
-
-        glTexCoord2d(1.0,0.0);
-        glVertex3f(a,-b,-5);
-
-    glEnd();
+                glTexCoord2f(0.5+tistep*i,0.5+tjstep*(j+1));
+                glVertex3f(istep*(i), jstep*(j+1), -5);
+            }
+            glEnd();
+        }
     glDisable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -425,26 +441,28 @@ void drawRoom(GLuint texture, GLuint texture1, GLuint texture2, GLuint texture3,
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture1);
 
-    glBegin(GL_TRIANGLE_STRIP);
-        double c = 5;
+        for(int i = -num;i<num+1;i++){
+            glBegin(GL_TRIANGLE_STRIP);
+            for(int k = -num;k<=2*num;k++){
+                glTexCoord2f(0.5+tjstep*i,0.66*(0.5+tkstep*k));
+                glVertex3f(istep*i, -b, kstep*k);
 
-        glTexCoord2d(0.0,1.0);
-        glVertex3f(a,b,2*c);
-        glTexCoord2d(0.0,0.0);
-        glVertex3f(a,b,-c);
-        glTexCoord2d(1.0,1.0);
-        glVertex3f(a,-b,2*c);
-        glTexCoord2d(1.0,0.0);
-        glVertex3f(a,-b,-c);
+                glTexCoord2f(0.5+tjstep*(i+1),0.66*(0.5+tkstep*(k)));
+                glVertex3f(istep*(i+1), -b, kstep*k);
+            }
+            glEnd();
+        }
+        for(int j = -num;j<num+1;j++){
+            glBegin(GL_TRIANGLE_STRIP);
+            for(int k = -num;k<=2*num;k++){
+                glTexCoord2f(0.66*(0.5+tkstep*k),0.5+tjstep*j);
+                glVertex3f(a, jstep*j, kstep*k);
 
-        glTexCoord2d(0.0,1.0);
-        glVertex3f(-a,-b,2*c);
-        glTexCoord2d(0.0,0.0);
-        glVertex3f(-a,-b,-c);
-        glTexCoord2d(1.0,1.0);
-        glVertex3f(-a,b,2*c);
-        glTexCoord2d(1.0,0.0);
-        glVertex3f(-a,b,-c);
+                glTexCoord2f(0.66*(0.5+tkstep*k),0.5+tjstep*(j+1));
+                glVertex3f(a, jstep*(j+1), kstep*k);
+            }
+            glEnd();
+        }
     glEnd();
     glDisable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -467,17 +485,31 @@ void drawRoom(GLuint texture, GLuint texture1, GLuint texture2, GLuint texture3,
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture1);
-    glBegin(GL_TRIANGLE_STRIP);
-        glTexCoord2d(0.0,1.0);
-        glVertex3f(a,b,2*c);
-        glTexCoord2d(0.0,0.0);
-        glVertex3f(-a,b,2*c);
-        glTexCoord2d(1.0,1.0);
-        glVertex3f(a,b,-c);
-        glTexCoord2d(1.0,0.0);
-        glVertex3f(-a,b,-c);
-    glEnd();
-    
+
+        for(int j = -num;j<num+1;j++){
+            glBegin(GL_TRIANGLE_STRIP);
+            for(int k = -num;k<=2*num;k++){
+                glTexCoord2f(0.66*(0.5+tkstep*k),0.5+tjstep*j);
+                glVertex3f(-a, jstep*j, kstep*k);
+
+                glTexCoord2f(0.66*(0.5+tkstep*k),0.5+tjstep*(j+1));
+                glVertex3f(-a, jstep*(j+1), kstep*k);
+            }
+            glEnd();
+        }
+
+        for(int i = -num;i<num+1;i++){
+            glBegin(GL_TRIANGLE_STRIP);
+            for(int k = -num;k<=2*num;k++){
+                glTexCoord2f(0.5+tjstep*i,0.66*(0.5+tkstep*k));
+                glVertex3f(istep*i, b, kstep*k);
+
+                glTexCoord2f(0.5+tjstep*(i+1),0.66*(0.5+tkstep*(k)));
+                glVertex3f(istep*(i+1), b, kstep*k);
+            }
+            glEnd();
+        }
+
     glDisable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
 
