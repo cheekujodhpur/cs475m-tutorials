@@ -395,7 +395,7 @@ void drawPedals(double phi2){
         glPopMatrix();
 }
 
-void drawRoom(GLuint texture, GLuint texture1, GLuint texture2, GLuint texture3){
+void drawRoom(GLuint texture, GLuint texture1, GLuint texture2, GLuint texture3, bool roomLights){
     glColor3f(0.5,0.5,0.5);
 
     //drawFloor
@@ -489,7 +489,6 @@ void drawRoom(GLuint texture, GLuint texture1, GLuint texture2, GLuint texture3)
         glVertex3f(-a+0.01,-b/2,c+1.5);
     glEnd();
 
-    printf("%d\n", texture3);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture3);
 
@@ -508,14 +507,19 @@ void drawRoom(GLuint texture, GLuint texture1, GLuint texture2, GLuint texture3)
     glBindTexture(GL_TEXTURE_2D, 0);
 
 
-    float emission[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    glMaterialfv(GL_FRONT, GL_EMISSION, emission);
+    GLfloat colSpec[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat noSpec[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    if(roomLights)
+        glMaterialfv(GL_FRONT, GL_EMISSION, colSpec);
+    else
+        glMaterialfv(GL_FRONT, GL_EMISSION, noSpec);
     glBegin(GL_TRIANGLE_STRIP);
         glVertex3f(-a+0.03,1.5,c+2.5);
         glVertex3f(-a+0.03,-1.5,c+2.5);
         glVertex3f(-a+0.03,1.5,c+2.0);
         glVertex3f(-a+0.03,-1.5,c+2.0);
     glEnd();
+    glMaterialfv(GL_FRONT, GL_EMISSION, noSpec);
 }
 
 GLuint LoadTexture(const char* filename, int &w, int &h){

@@ -11,6 +11,9 @@ GLuint wallTexture;
 GLuint roofTexture;
 GLuint paintTexture;
 
+//lights
+bool roomLights = true;
+
 //for debugging
 Vec supremo(0.0,0.0,0.0);
 Vec eye(9.0 ,0.0, 0.0);
@@ -113,24 +116,23 @@ void display(void)
 
   //draw the room
   float colorWhite[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorWhite);
+  //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorWhite);
 
   glPushMatrix();
     glTranslatef(0.0, 0.0, 1.55);
-    drawRoom(woodenTexture, wallTexture,roofTexture,paintTexture);
+    drawRoom(woodenTexture, wallTexture,roofTexture,paintTexture, roomLights);
   glPopMatrix();
 
   //draw the cycle
   glPushMatrix();
     glTranslatef(fctrax(phi2),fctray(phi2),0);
     glRotatef(fcrot(phi2)*(180/M_PI),0.0,0.0,1.0);
-    //drawCycle();
+    drawCycle();
   glPopMatrix();
 
   glutSwapBuffers();
 }
 
-bool roomLights = true;
 
 //Our function for processing ASCII keys
 void processNormalKeys(unsigned char key, int x, int y) {
@@ -220,6 +222,8 @@ void processNormalKeys(unsigned char key, int x, int y) {
   if (key == 27)
   exit(0);
 
+//	float position1[] = { supremo.x, supremo.y, supremo.z, 1.0f };	
+// glLightfv(GL_LIGHT1, GL_POSITION, position1);
   glutPostRedisplay();
 }
 
@@ -261,6 +265,48 @@ void init(void)
   gluLookAt(9.0, 0.0, 0.0,  // eye is at (0,0,8)
   0.0, 0.0, 0.0,      // center is at (0,0,0)
   0.0, 0.0, 1.0);      // up is in positive Y direction
+
+	glShadeModel(GL_SMOOTH);
+
+	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+	
+	// Enable light and set up 2 light sources (GL_LIGHT0 and GL_LIGHT1)
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
+
+	// We're setting up two light sources. One of them is located
+	// on the left side of the model (x = -1.5f) and emits white light. The
+	// second light source is located on the right side of the model (x = 1.5f)
+	// emitting red light.
+
+	// GL_LIGHT0: the white light emitting light source
+	// Create light components for GL_LIGHT0
+	float ambientLight0[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	float diffuseLight0[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+	float specularLight0[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	float position0[] = { -1.5f, 1.0f, -4.0f, 1.0f };	
+	// Assign created components to GL_LIGHT0
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight0);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight0);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight0);
+	glLightfv(GL_LIGHT0, GL_POSITION, position0);
+
+	// GL_LIGHT1: the red light emitting light source
+	// Create light components for GL_LIGHT1
+	float ambientLight1[] = { 0.8f, 0.8f, 1.0f, 1.0f };
+	float diffuseLight1[] = { 0.8f, 0.8f, 1.0f, 1.0f };
+	float specularLight1[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float position1[] = { -9.96f,0.0f,7.225f,1.0f };	
+	// Assign created components to GL_LIGHT1
+	glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight1);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight1);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight1);
+	glLightfv(GL_LIGHT1, GL_POSITION, position1);
+	glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.005);
+
+    glEnable(GL_COLOR_MATERIAL);
+    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 }
 
 
@@ -273,33 +319,6 @@ int main(int argc, char **argv)
   glutDisplayFunc(display);
   glutKeyboardFunc(processNormalKeys);
   glutSpecialFunc(processSpecialKeys);
-  glEnable(GL_LIGHTING);
-
-  //LIGHT0
-  //glEnable(GL_LIGHT0);
-   
-  //Create light components
-  GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-  GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
-  GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-  GLfloat position[] = { -1.5f, 1.0f, -4.0f, 1.0f };
-   
-   // Assign created components to GL_LIGHT0
-   glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
-   glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-   glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
-   glLightfv(GL_LIGHT0, GL_POSITION, position);
-
-   //LIGHT1
-  glEnable(GL_LIGHT1);
-   
-  //Create light components
-  GLfloat specularLight1[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-  GLfloat position1[] = { -9.97f, 0.0f, 7.225f, 1.0f };
-   
-   // Assign created components to GL_LIGHT0
-   glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight1);
-   glLightfv(GL_LIGHT1, GL_POSITION, position1);
 
    //load all textures
    int texw,texh;

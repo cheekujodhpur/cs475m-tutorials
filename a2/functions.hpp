@@ -33,6 +33,6 @@ void drawHandle(double phi,GLuint texture);
 void drawBox(double a, double b, double c, Vec color);
 void drawPedals(double phi2);
 void drawDisk(double height, double radius,double tooth_width, double tooth_height, Vec trans, Vec rot, Vec color);
-void drawRoom(GLuint texture,GLuint texture1,GLuint texture2, GLuint texture3);
+void drawRoom(GLuint texture,GLuint texture1,GLuint texture2, GLuint texture3, bool roomLights);
 
 GLuint LoadTexture(const char* filename, int &width, int &height);
