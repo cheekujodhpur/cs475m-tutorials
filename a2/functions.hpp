@@ -12,6 +12,7 @@ struct Vec {
 
 void drawCylinder(double height, double radius, Vec trans, Vec rot, Vec color);
 void drawTorus(double width, double radius, Vec trans, Vec rot, Vec color,double total);
+void drawTorusTexture(double width, double radius, Vec trans, Vec rot, Vec color,GLuint texture, double total);
 
 struct Seat{
     double th, bh; //top height, bottom height
@@ -24,12 +25,14 @@ struct Seat{
     void draw();
 };
 
-void drawWheel();
-void drawFrontWheel();
+void drawWheel(GLuint texture);
+void drawFrontWheel(GLuint texture);
 void drawFrame();
 void drawSeat();
-void drawHandle(double phi);
+void drawHandle(double phi,GLuint texture);
 void drawBox(double a, double b, double c, Vec color);
 void drawPedals(double phi2);
 void drawDisk(double height, double radius,double tooth_width, double tooth_height, Vec trans, Vec rot, Vec color);
-void drawRoom();
+void drawRoom(GLuint texture,GLuint texture1,GLuint texture2, GLuint texture3);
+
+GLuint LoadTexture(const char* filename, int &width, int &height);

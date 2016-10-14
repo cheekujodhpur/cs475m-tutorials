@@ -1,4 +1,5 @@
 #include "functions.hpp"
+#include <stdio.h>
 
 void Seat::drawTop(){
       glBegin(GL_TRIANGLE_STRIP);
@@ -181,9 +182,46 @@ void drawTorus(double width, double radius, Vec trans, Vec rot, Vec color, doubl
   glPopMatrix();
 }
 
+//torus drawing
+void drawTorusTexture(double width, double radius, Vec trans, Vec rot, Vec color, GLuint texture, double total=2.0*M_PI){
+  int num = 100;
+
+  double Step = total / num;
+  double smallStep = 2.0*M_PI / num;
+  int i, j;
+
+  glColor3f(color.x,color.y,color.z); 
+
+  glPushMatrix();
+
+  glTranslatef(trans.x, trans.y, trans.z);
+  glRotatef(rot.x, 1.0, 0.0, 0.0);
+  glRotatef(rot.y, 0.0, 1.0, 0.0);
+  glRotatef(rot.z, 0.0, 0.0, 1.0);
+
+  for (i = 0; i < num; ++i) {
+        double theta = i*Step;
+
+          glEnable(GL_TEXTURE_2D);
+          glBindTexture(GL_TEXTURE_2D, texture);
+      glBegin(GL_TRIANGLE_STRIP);
+      for (j = 0; j <= num; ++j) {
+          double phi = j * smallStep;
+          glTexCoord2d((double)i/num, (double)j/num);
+          glVertex3f((radius-width*sin(phi))*cos(theta),(radius-width*sin(phi))*sin(theta), width*cos(phi));
+          glTexCoord2d((double)(i+1)/num, (double)j/num);
+          glVertex3f((radius-width*sin(phi))*cos(theta+Step),(radius-width*sin(phi))*sin(theta+Step), width*cos(phi)); 
+      } 
+      glEnd();
+          glBindTexture(GL_TEXTURE_2D, 0);
+          glDisable(GL_TEXTURE_2D);
+  }
+  glPopMatrix();
+}
+
 //drawing wheel
-void drawWheel(){
-  drawTorus(0.08,1.875, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0), Vec(0.1,0.1,0.1));
+void drawWheel(GLuint texture){
+  drawTorusTexture(0.08,1.875, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0), Vec(0.1,0.1,0.1),texture);
   drawTorus(0.075,1.7, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0), Vec(0.7,0.7,0.7));
   drawCylinder(0.28, 0.1, Vec(0.0,0.0,0.0), Vec(0.0, 90.0, 0.0), Vec(0.7,0.0,0.0));
   //Back gear disk
@@ -201,8 +239,8 @@ void drawWheel(){
   }	
 }
 
-void drawFrontWheel(){
-  drawTorus(0.2,1.18, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0), Vec(0.1,0.1,0.1));
+void drawFrontWheel(GLuint texture){
+  drawTorusTexture(0.2,1.18, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0), Vec(0.1,0.1,0.1),texture);
   drawTorus(0.17,1.1, Vec(0.0,0.0, 0.0), Vec(0.0,90,0.0), Vec(0.7,0.7,0.7));
   drawCylinder(0.64, 0.15, Vec(0.0,0.0,0.0), Vec(0.0, 90.0, 0.0), Vec(0.7,0.0,0.0));
   for(int x=0;x<10;x++){
@@ -250,7 +288,7 @@ void drawSeat(){
   glPopMatrix();
 }
 
-void drawHandle(double phi){
+void drawHandle(double phi,GLuint texture){
     glPushMatrix();
     drawCylinder(3.0,0.18, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.5,0.2,0.7));
         glPushMatrix();
@@ -262,7 +300,7 @@ void drawHandle(double phi){
                 glPushMatrix();
                 glTranslatef(0.0,0.0,-1.65);
                 glRotatef(phi,1.0,0.0,0.0);
-                drawFrontWheel();
+                drawFrontWheel(texture);
                 glPopMatrix();
             glPopMatrix();
         glPopMatrix();
@@ -357,35 +395,175 @@ void drawPedals(double phi2){
         glPopMatrix();
 }
 
-void drawRoom(){
+void drawRoom(GLuint texture, GLuint texture1, GLuint texture2, GLuint texture3){
     glColor3f(0.5,0.5,0.5);
 
-    glBegin(GL_TRIANGLE_STRIP);
-
-//        glVertex3f(a,b,c);
-//        glVertex3f(a,b,-c);
-//        glVertex3f(a,-b,c);
-//        glVertex3f(a,-b,-c);
-//        glVertex3f(-a,-b,c);
-//        glVertex3f(-a,-b,-c);
-//        glVertex3f(-a,b,c);
-//        glVertex3f(-a,b,-c);
-
-    glEnd();
-
-//        glVertex3f(a,-b,c);
-//        glVertex3f(-a,-b,c);
-//        glVertex3f(a,b,c);
-//        glVertex3f(-a,b,c);
-//        glVertex3f(a,b,-c);
     //drawFloor
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture);
     glBegin(GL_TRIANGLE_STRIP);
         double a = 10;
         double b = 10;
+
+        glTexCoord2d(0.0,1.0);
         glVertex3f(-a,b,-5);
+
+        glTexCoord2d(0.0,0.0);
         glVertex3f(-a,-b,-5);
+
+        glTexCoord2d(1.0,1.0);
         glVertex3f(a,b,-5);
+
+        glTexCoord2d(1.0,0.0);
         glVertex3f(a,-b,-5);
 
     glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    //draw walls
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    glBegin(GL_TRIANGLE_STRIP);
+        double c = 5;
+
+        glTexCoord2d(0.0,1.0);
+        glVertex3f(a,b,2*c);
+        glTexCoord2d(0.0,0.0);
+        glVertex3f(a,b,-c);
+        glTexCoord2d(1.0,1.0);
+        glVertex3f(a,-b,2*c);
+        glTexCoord2d(1.0,0.0);
+        glVertex3f(a,-b,-c);
+
+        glTexCoord2d(0.0,1.0);
+        glVertex3f(-a,-b,2*c);
+        glTexCoord2d(0.0,0.0);
+        glVertex3f(-a,-b,-c);
+        glTexCoord2d(1.0,1.0);
+        glVertex3f(-a,b,2*c);
+        glTexCoord2d(1.0,0.0);
+        glVertex3f(-a,b,-c);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+
+    glBegin(GL_TRIANGLE_STRIP);
+        glTexCoord2d(0.0,1.0);
+        glVertex3f(a,-b,2*c);
+        glTexCoord2d(0.0,0.0);
+        glVertex3f(-a,-b,2*c);
+        glTexCoord2d(1.0,1.0);
+        glVertex3f(a,b,2*c);
+        glTexCoord2d(1.0,0.0);
+        glVertex3f(-a,b,2*c);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+    glBegin(GL_TRIANGLE_STRIP);
+        glTexCoord2d(0.0,1.0);
+        glVertex3f(a,b,2*c);
+        glTexCoord2d(0.0,0.0);
+        glVertex3f(-a,b,2*c);
+        glTexCoord2d(1.0,1.0);
+        glVertex3f(a,b,-c);
+        glTexCoord2d(1.0,0.0);
+        glVertex3f(-a,b,-c);
+    glEnd();
+    
+    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glColor3f(0.2,0.2,0.2);
+    glBegin(GL_TRIANGLE_STRIP);
+        glVertex3f(-a+0.01,b/2,-c/2+1.5);
+        glVertex3f(-a+0.01,-b/2,-c/2+1.5);
+        glVertex3f(-a+0.01,b/2,c+1.5);
+        glVertex3f(-a+0.01,-b/2,c+1.5);
+    glEnd();
+
+    printf("%d\n", texture3);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture3);
+
+    glBegin(GL_TRIANGLE_STRIP);
+        glTexCoord2d(1.0,0.0);
+        glVertex3f(-a+0.02,b/2-0.3,-c/2+1.8);
+        glTexCoord2d(0.0,0.0);
+        glVertex3f(-a+0.02,-b/2+0.3,-c/2+1.8);
+        glTexCoord2d(1.0,1.0);
+        glVertex3f(-a+0.02,b/2-0.3,c+1.2);
+        glTexCoord2d(0.0,1.0);
+        glVertex3f(-a+0.02,-b/2+0.3,c+1.2);
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+
+    float emission[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    glMaterialfv(GL_FRONT, GL_EMISSION, emission);
+    glBegin(GL_TRIANGLE_STRIP);
+        glVertex3f(-a+0.03,1.5,c+2.5);
+        glVertex3f(-a+0.03,-1.5,c+2.5);
+        glVertex3f(-a+0.03,1.5,c+2.0);
+        glVertex3f(-a+0.03,-1.5,c+2.0);
+    glEnd();
+}
+
+GLuint LoadTexture(const char* filename, int &w, int &h){
+    GLuint texture;
+    unsigned char header[54]; //54 byte header of BMP
+    int pos;
+    unsigned int size; //w*h*3
+
+    unsigned char* data; //Data in RGB Format
+    FILE *file;
+
+    file = fopen(filename, "rb");
+    if(file==NULL) return 0; //if file is empty
+    if(fread(header, 1, 54, file)!=54){
+        printf("incorrect BMP file\n");
+        return 0;
+    }
+
+    //read metadata
+    pos = *(int*)&(header[0x0A]);
+    size = *(int*)&(header[0x22]);
+    w = *(int*)&(header[0x12]);
+    h = *(int*)&(header[0x16]);
+
+    //just in case metadata is missing
+    if(size == 0)
+        size = w*h*3;
+    if(pos == 0)
+        pos = 54;
+
+    data = new unsigned char[size];
+
+    fread(data, size, 1, file); //read the file
+    fclose(file);
+    ////////////////////////////////
+    
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,w, h, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    free(data);
+    return texture; //return the texture id
 }

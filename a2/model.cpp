@@ -4,6 +4,13 @@
 
 using namespace std;
 
+// Texture numbers
+GLuint woodenTexture;
+GLuint wheelTexture;
+GLuint wallTexture;
+GLuint roofTexture;
+GLuint paintTexture;
+
 //for debugging
 Vec supremo(0.0,0.0,0.0);
 Vec eye(9.0 ,0.0, 0.0);
@@ -55,7 +62,7 @@ void drawCycle(){
     glPushMatrix();
     glTranslatef(0,4.25,-1.5);
     glRotatef(theta(phi2),1.0,0.0,0.0);
-    drawWheel();
+    drawWheel(wheelTexture);
     glPopMatrix();
 
     // draw seat
@@ -75,7 +82,7 @@ void drawCycle(){
     glTranslatef(0.0,-3.9,1.15);
     glRotatef(-17.0, 1.0, 0.0, 0.0);
     glRotatef(theta2, 0.0, 0.0, 1.0);
-    drawHandle(phi(phi2));
+    drawHandle(phi(phi2),wheelTexture);
     glPopMatrix();
 
     //draw pedals
@@ -105,23 +112,25 @@ void display(void)
   up.x, up.y, up.z);      // up is in positive Y direction
 
   //draw the room
-  float colorGrey[] = { 1.0f, 1.0f, 1.0f, 1.0f };
- // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGrey);
+  float colorWhite[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorWhite);
 
   glPushMatrix();
     glTranslatef(0.0, 0.0, 1.55);
-    drawRoom();
+    drawRoom(woodenTexture, wallTexture,roofTexture,paintTexture);
   glPopMatrix();
 
   //draw the cycle
   glPushMatrix();
     glTranslatef(fctrax(phi2),fctray(phi2),0);
     glRotatef(fcrot(phi2)*(180/M_PI),0.0,0.0,1.0);
-    drawCycle();
+    //drawCycle();
   glPopMatrix();
 
   glutSwapBuffers();
 }
+
+bool roomLights = true;
 
 //Our function for processing ASCII keys
 void processNormalKeys(unsigned char key, int x, int y) {
@@ -195,6 +204,18 @@ void processNormalKeys(unsigned char key, int x, int y) {
     case 'X':
         phi2 += 2.5;
         break;
+
+    //light
+    case 'L':
+       if(roomLights){
+           glDisable(GL_LIGHT1);
+           roomLights = !roomLights; 
+       }
+       else{
+           glEnable(GL_LIGHT1);
+           roomLights = !roomLights;
+       }
+       break;
   }
   if (key == 27)
   exit(0);
@@ -242,6 +263,7 @@ void init(void)
   0.0, 0.0, 1.0);      // up is in positive Y direction
 }
 
+
 int main(int argc, char **argv)
 {
   glutInit(&argc, argv);
@@ -251,8 +273,10 @@ int main(int argc, char **argv)
   glutDisplayFunc(display);
   glutKeyboardFunc(processNormalKeys);
   glutSpecialFunc(processSpecialKeys);
-//  glEnable(GL_LIGHTING);
-//  glEnable(GL_LIGHT0);
+  glEnable(GL_LIGHTING);
+
+  //LIGHT0
+  //glEnable(GL_LIGHT0);
    
   //Create light components
   GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
@@ -265,6 +289,26 @@ int main(int argc, char **argv)
    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
    glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+   //LIGHT1
+  glEnable(GL_LIGHT1);
+   
+  //Create light components
+  GLfloat specularLight1[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+  GLfloat position1[] = { -9.97f, 0.0f, 7.225f, 1.0f };
+   
+   // Assign created components to GL_LIGHT0
+   glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight1);
+   glLightfv(GL_LIGHT1, GL_POSITION, position1);
+
+   //load all textures
+   int texw,texh;
+   woodenTexture = LoadTexture("wooden.bmp", texw, texh);
+   wheelTexture = LoadTexture("wheel.bmp", texw, texh);
+   wallTexture = LoadTexture("wall.bmp", texw, texh);
+   roofTexture = LoadTexture("roof.bmp", texw, texh);
+   paintTexture = LoadTexture("painting.bmp", texw, texh);
+
   init();
   glutMainLoop();
   return 0;
