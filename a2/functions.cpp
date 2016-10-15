@@ -45,7 +45,7 @@ void Seat::drawSides(){
       glEnd();
     }
 void Seat::draw(){
-        glColor3f(1.0,1.0,1.0);
+        glColor3f(0,0,0);
 
         glPushMatrix();
         drawTop();
@@ -89,6 +89,51 @@ void drawCylinder(double height, double radius, Vec trans, Vec rot, Vec color){
   }
   glPopMatrix();
 }
+
+//textured cylinder drawing
+void drawCylinderTexture(double height, double radius, Vec trans, Vec rot, Vec color, GLuint texture){
+    int numMajor = 100;
+    int numMinor = 100;
+
+  double majorStep = height / numMajor;
+  double minorStep = 2.0 * M_PI / numMinor;
+  int i, j;
+
+  glColor3f(color.x,color.y,color.z);
+
+  glPushMatrix();
+
+  glTranslatef(trans.x, trans.y, trans.z);
+  glRotatef(rot.x, 1.0, 0.0, 0.0);
+  glRotatef(rot.y, 0.0, 1.0, 0.0);
+  glRotatef(rot.z, 0.0, 0.0, 1.0);
+
+  for (i = 0; i < numMajor; ++i) {
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, texture);
+
+      GLfloat z0 = 0.5 * height - i * majorStep;
+      GLfloat z1 = z0 - majorStep;
+
+      glBegin(GL_TRIANGLE_STRIP);
+      for (j = 0; j <= numMinor; ++j) {
+          double a = j * minorStep;
+          GLfloat x = radius * cos(a);
+          GLfloat y = radius * sin(a);
+	  glTexCoord2d((double)j/numMinor, (double)i/numMajor);          
+ 	  glVertex3f(x, y, z0);
+          glTexCoord2d((double)j/numMinor, (double)j/numMajor);
+          glVertex3f(x, y, z1);
+      }
+      glEnd();
+
+      glBindTexture(GL_TEXTURE_2D, 0);
+      glDisable(GL_TEXTURE_2D);
+
+  }
+  glPopMatrix();
+}
+
 
 //gear drawing(solid cylinder)
 void drawDisk(double height, double radius,double tooth_width, double tooth_height, Vec trans, Vec rot, Vec color){
@@ -255,27 +300,27 @@ void drawFrontWheel(GLuint texture){
   }	
 }
 
-void drawFrame(){
+void drawFrame(GLuint texture){
   //big rod
-  drawCylinder(3.2, 0.2, Vec(0.0, 0.5, 0.0), Vec(-15.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
+  drawCylinderTexture(3.2, 0.2, Vec(0.0, 0.5, 0.0), Vec(-15.0, 0.0, 0.0),Vec(0.0,0.1,0.85),texture);
   //middle top rod
-  drawCylinder(4.5, 0.15, Vec(0.0, -1.9, -0.3), Vec(60.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
+  drawCylinderTexture(4.5, 0.15, Vec(0.0, -1.9, -0.3), Vec(60.0, 0.0, 0.0),Vec(0.0,0.1,0.85),texture);
   //middle bottom rod
-  drawCylinder(4.5, 0.15, Vec(0.0,-1.55, 1.15) , Vec(85.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
+  drawCylinderTexture(4.5, 0.15, Vec(0.0,-1.55, 1.15) , Vec(85.0, 0.0, 0.0),Vec(0.0,0.1,0.85),texture);
   //front rod
-  drawCylinder(1.7, 0.2, Vec(0.0, -3.95, 1.0), Vec(-17.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
+  drawCylinderTexture(1.7, 0.2, Vec(0.0, -3.95, 1.0), Vec(-17.0, 0.0, 0.0),Vec(0.0,0.1,0.85),texture);
 
   //back top rods
-  drawCylinder(1.1, 0.11, Vec(-0.15,1.2,1.1) , Vec(50.0, 15.0, 0.0),Vec(0.0,0.1,0.85));
-  drawCylinder(1.1, 0.11, Vec(0.15,1.2,1.1) , Vec(50.0, -15.0, 0.0),Vec(0.0,0.1,0.85));
-  drawCylinder(3.7, 0.11, Vec(-0.25,2.95,-0.35), Vec(50.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
-  drawCylinder(3.7, 0.11, Vec(0.25,2.95,-0.35), Vec(50.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
+  drawCylinderTexture(1.1, 0.11, Vec(-0.15,1.2,1.1) , Vec(50.0, 15.0, 0.0),Vec(0.0,0.1,0.85),texture);
+  drawCylinderTexture(1.1, 0.11, Vec(0.15,1.2,1.1) , Vec(50.0, -15.0, 0.0),Vec(0.0,0.1,0.85),texture);
+  drawCylinderTexture(3.7, 0.11, Vec(-0.25,2.95,-0.35), Vec(50.0, 0.0, 0.0),Vec(0.0,0.1,0.85),texture);
+  drawCylinderTexture(3.7, 0.11, Vec(0.25,2.95,-0.35), Vec(50.0, 0.0, 0.0),Vec(0.0,0.1,0.85),texture);
 
   //back bottom rods
-  drawCylinder(1.1, 0.11, Vec(-0.15,0.65,-1.5) , Vec(90.0, 15.0, 0.0),Vec(0.0,0.1,0.85));
-  drawCylinder(1.1, 0.11, Vec(0.15,0.65,-1.5) , Vec(90.0, -15.0, 0.0),Vec(0.0,0.1,0.85));
-  drawCylinder(3.3, 0.11, Vec(0.25, 2.75, -1.5), Vec(90.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
-  drawCylinder(3.3, 0.11, Vec(-0.25, 2.75, -1.5), Vec(90.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
+  drawCylinderTexture(1.1, 0.11, Vec(-0.15,0.65,-1.5) , Vec(90.0, 15.0, 0.0),Vec(0.0,0.1,0.85),texture);
+  drawCylinderTexture(1.1, 0.11, Vec(0.15,0.65,-1.5) , Vec(90.0, -15.0, 0.0),Vec(0.0,0.1,0.85),texture);
+  drawCylinderTexture(3.3, 0.11, Vec(0.25, 2.75, -1.5), Vec(90.0, 0.0, 0.0),Vec(0.0,0.1,0.85),texture);
+  drawCylinderTexture(3.3, 0.11, Vec(-0.25, 2.75, -1.5), Vec(90.0, 0.0, 0.0),Vec(0.0,0.1,0.85),texture);
 }
 
 void drawSeat(){
@@ -284,28 +329,28 @@ void drawSeat(){
   glPushMatrix();
   glRotatef(-75,0.0,1.0,0.0);
   glTranslatef(-0.5,0.0,.7);
-  drawCylinder(1.5,0.18,Vec(0.0,0.0,0.0),Vec(0.0,0.0,0.0),Vec(0.0,0.85,0.1));
+  drawCylinder(1.5,0.18,Vec(0.0,0.0,0.0),Vec(0.0,0.0,0.0),Vec(0.3,0.3,0.3));
   glPopMatrix();
 }
 
-void drawHandle(double phi,GLuint texture){
+void drawHandle(double phi,GLuint texture, GLuint texture2){
     glPushMatrix();
-    drawCylinder(3.0,0.18, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.5,0.2,0.7));
+    drawCylinderTexture(3.0,0.18, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.5,0.2,0.7),texture2);
         //draw headlight
         glPushMatrix();
         GLfloat hlpos[] = {0.0f,-1.0f,0.0f,1.0f};
         GLfloat hldir[] = {0.0f,-1.0f,-0.1f};
         glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, hldir);
         glLightfv(GL_LIGHT2, GL_POSITION, hlpos);
-        drawCylinder(0.4,0.35, Vec(0.0,-0.3,0.0), Vec(107.0,0.0,0.0), Vec(0.0,0.1,0.85));
+        drawCylinderTexture(0.4,0.35, Vec(0.0,-0.3,0.0), Vec(107.0,0.0,0.0), Vec(0.0,0.1,0.85),texture2);
         glPopMatrix();
 
         glPushMatrix();
         glTranslatef(0.0,0.0,-1.5);
-        drawTorus(0.18,0.5, Vec(0.0,0.0, -0.5), Vec(90.0,0,0.0), Vec(0.7,0.0,0.0),M_PI);
+        drawTorusTexture(0.18,0.5, Vec(0.0,0.0, -0.5), Vec(90.0,0,0.0), Vec(0,0.1,0.85),texture2,M_PI);
             glPushMatrix();
-            drawCylinder(1.3, 0.175, Vec(0.5,0.00,-1.15), Vec(0.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
-            drawCylinder(1.3, 0.175, Vec(-0.5,0.00,-1.15), Vec(0.0, 0.0, 0.0),Vec(0.0,0.1,0.85));
+            drawCylinderTexture(1.3, 0.175, Vec(0.5,0.00,-1.15), Vec(0.0, 0.0, 0.0),Vec(0.0,0.1,0.85),texture2);
+            drawCylinderTexture(1.3, 0.175, Vec(-0.5,0.00,-1.15), Vec(0.0, 0.0, 0.0),Vec(0.0,0.1,0.85),texture2);
                 glPushMatrix();
                 glTranslatef(0.0,0.0,-1.65);
                 glRotatef(phi,1.0,0.0,0.0);
@@ -319,15 +364,18 @@ void drawHandle(double phi,GLuint texture){
             glRotatef(90,0.0,1.0,0.0);
             glRotatef(180.0,0.0,0.0,1.0);
             glPushMatrix();
-            drawTorus(0.18,0.5, Vec(0.0,0.0, 0.0), Vec(00.0,0,0.0), Vec(0.7,0.0,0.0),M_PI/2);
-            drawCylinder(0.8,0.18, Vec(0.5,-0.4,0.0), Vec(90.0,0.0,0.0), Vec(0.5,0.2,0.7));
+	   // drawTorusTexture(0.18,0.5, Vec(0.0,0.0, 0.0), Vec(00.0,0,0.0), Vec(0,0.1,0.85),texture2,M_PI/2);
+            drawTorus(0.18,0.5, Vec(0.0,0.0, 0.0), Vec(00.0,0,0.0), Vec(0.3,0.3,0.3),M_PI/2);
+           drawCylinderTexture(0.8,0.18, Vec(0.5,-0.4,0.0), Vec(90.0,0.0,0.0), Vec(0.0,0.1,0.85),texture);
+            drawCylinder(0.8,0.18, Vec(0.5,-0.4,0.0), Vec(90.0,0.0,0.0), Vec(0.3,0.3,0.3));
             //draw hand hand handle
                 glPushMatrix();
                     glTranslatef(0.5,-0.8,0.0);
                     glRotatef(90,0.0,0.0,1.0);
-                    drawCylinder(3.6,0.18, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.7,0.0,0.7));
-                    drawCylinder(0.8,0.20, Vec(0.0,0.0,1.4), Vec(0.0,0.0,0.0), Vec(0.7,0.7,0.7));
-                    drawCylinder(0.8,0.20, Vec(0.0,0.0,-1.4), Vec(0.0,0.0,0.0), Vec(0.7,0.7,0.7));
+                    //drawCylinderTexture(3.6,0.18, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0,0.1,0.85),texture2);
+                    drawCylinder(3.6,0.18, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.3,0.3,0.3));
+                    drawCylinder(0.8,0.20, Vec(0.0,0.0,1.4), Vec(0.0,0.0,0.0), Vec(0,0,0));
+                    drawCylinder(0.8,0.20, Vec(0.0,0.0,-1.4), Vec(0.0,0.0,0.0), Vec(0,0,0));
                 glPopMatrix();
             glPopMatrix();
         glPopMatrix();
@@ -377,14 +425,14 @@ void drawPedals(double phi2){
         glTranslatef(0.0,0.0,-0.8);
         glRotatef(60,0.0,1.0,0.0);
         glTranslatef(0.0,0.0,-0.4);
-        drawCylinder(1.0,0.13, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.7,0.0,0.1));
+        drawCylinder(1.0,0.13, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.3,0.3,0.3));
             //pedal shafts
             glPushMatrix();
             glTranslatef(0.0,0.0,-0.5);
             glRotatef(-60,0.0,1.0,0.0);
             glTranslatef(0.0,0.0,-0.3);
             glRotatef(-phi2,0.0,0.0,1.0);
-            drawBox(0.1,0.25,0.45,Vec(1.0,1.0,1.0));
+            drawBox(0.1,0.25,0.45,Vec(0,0,0));
             glPopMatrix();
         glPopMatrix();
 
@@ -392,14 +440,14 @@ void drawPedals(double phi2){
         glTranslatef(0.0,0.0,0.8);
         glRotatef(60,0.0,1.0,0.0);
         glTranslatef(0.0,0.0,0.4);
-        drawCylinder(1.0,0.13, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.7,0.0,0.1));
+        drawCylinder(1.0,0.13, Vec(0.0,0.0,0.0), Vec(0.0,0.0,0.0), Vec(0.3,0.3,0.3));
             //pedal shafts
             glPushMatrix();
             glTranslatef(0.0,0.0,0.5);
             glRotatef(-60,0.0,1.0,0.0);
             glTranslatef(0.0,0.0,0.3);
             glRotatef(-phi2,0.0,0.0,1.0);
-            drawBox(0.1,0.25,0.45,Vec(1.0,1.0,1.0));
+            drawBox(0.1,0.25,0.45,Vec(0,0,0));
             glPopMatrix();
         glPopMatrix();
 }

@@ -10,6 +10,7 @@ GLuint wheelTexture;
 GLuint wallTexture;
 GLuint roofTexture;
 GLuint paintTexture;
+GLuint frameTexture;
 
 //lights
 bool roomLights = true;
@@ -19,6 +20,7 @@ bool headLights = false;
 Vec supremo(0.0,0.0,0.0);
 Vec eye(9.0 ,0.0, 0.0);
 Vec up(0.0, 0.0, 1.0);
+Vec lookat(0.0,0.0,0.0);
 
 //back wheel angle parameter
 double theta = 0;
@@ -33,6 +35,8 @@ double fcrot=0;
 double fctrax=0;
 double fctray=0;
 
+int cameraMode = 0;
+
 double ln_axle = 9.05;
 
 void update_params(float delta_phi2, float theta2)
@@ -41,11 +45,16 @@ void update_params(float delta_phi2, float theta2)
     float bw = 2.8725 * delta_phi2;
     float fw = (bw-ln_axle)*cos(theta2*(M_PI/180.0)) + sqrt(ln_axle*ln_axle + bw*(2*ln_axle-bw)*sin(theta2*(M_PI/180.0)*sin(theta2*(M_PI/180.0))));
     phi += (fw*180.0)/(1.28*M_PI);
-    std::cout<<fw;
     float rotation = atan2(bw*sin(theta2*(M_PI/180.0)), ln_axle +  bw*cos(theta2*(M_PI/180.0)));
     fcrot = (180/M_PI)*(angleSum(((M_PI/180)*fcrot),rotation));
-    fctrax += bw*sin(theta2*(M_PI/180.0)); 
-    fctray -= bw*cos(theta2*(M_PI/180.0));   
+    fctrax += bw*sin(theta2*(M_PI/180.0))*cos(fcrot*(M_PI/180.0))+bw*cos(theta2*(M_PI/180.0))*sin(fcrot*(M_PI/180.0)); 
+    fctray -= bw*cos(theta2*(M_PI/180.0))*cos(fcrot*(M_PI/180.0))+bw*sin(theta2*(M_PI/180.0))*sin(fcrot*(M_PI/180.0));
+    if (cameraMode == 1 || cameraMode == 2) {
+    	eye.x+=bw*sin(theta2*(M_PI/180.0))*cos(fcrot*(M_PI/180.0))+bw*cos(theta2*(M_PI/180.0))*sin(fcrot*(M_PI/180.0));
+	eye.y-= bw*cos(theta2*(M_PI/180.0))*cos(fcrot*(M_PI/180.0))+bw*sin(theta2*(M_PI/180.0))*sin(fcrot*(M_PI/180.0));
+	lookat.x+=bw*sin(theta2*(M_PI/180.0))*cos(fcrot*(M_PI/180.0))+bw*cos(theta2*(M_PI/180.0))*sin(fcrot*(M_PI/180.0)); 
+	lookat.y-= bw*cos(theta2*(M_PI/180.0))*cos(fcrot*(M_PI/180.0))+bw*sin(theta2*(M_PI/180.0))*sin(fcrot*(M_PI/180.0));
+    }
 }
 /*inline double bw(double x){
     return 1.915*theta(x)*(M_PI/180.0);
@@ -69,11 +78,11 @@ inline double fctray(double x){
 //seat paramter
 double seat_height = 2.35;
 
-void drawCycle(){
+void drawCycle(GLuint frameTexture){
   float colorBlue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
   //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorBlue);
 
-  drawFrame();
+  drawFrame(frameTexture);
     // draw back wheel
     glPushMatrix();
     glTranslatef(0,4.25,-1.5);
@@ -98,7 +107,7 @@ void drawCycle(){
     glTranslatef(0.0,-3.9,1.15);
     glRotatef(-17.0, 1.0, 0.0, 0.0);
     glRotatef(theta2, 0.0, 0.0, 1.0);
-    drawHandle(phi,wheelTexture);
+    drawHandle(phi,wheelTexture,frameTexture);
     glPopMatrix();
 
     //draw pedals
@@ -112,8 +121,8 @@ void drawCycle(){
     //draw chain
     glPushMatrix();
     glRotatef(90,1.0,0.0,0.0);
-    drawCylinder(4.114,0.03, Vec(0.148,-0.94,-2.2), Vec(-6,2.165,27.324), Vec(0.1,0.9,0.1));
-    drawCylinder(4.114,0.03, Vec(0.148,-1.85,-2.2), Vec(1,2.165,-27.324), Vec(0.1,0.9,0.1));
+    drawCylinder(4.114,0.03, Vec(0.148,-0.94,-2.2), Vec(-6,2.165,27.324), Vec(0,0,0));
+    drawCylinder(4.114,0.03, Vec(0.148,-1.85,-2.2), Vec(1,2.165,-27.324), Vec(0,0,0));
     glPopMatrix();
 
 }
@@ -124,7 +133,7 @@ void display(void)
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity(); 
   gluLookAt(eye.x, eye.y, eye.z,  // eye is at (0,0,8)
-  0.0, 0.0, 0.0,      // center is at (0,0,0)
+  lookat.x,lookat.y,lookat.z,      // center is at (0,0,0)
   up.x, up.y, up.z);      // up is in positive Y direction
 
   //draw the room
@@ -140,7 +149,7 @@ void display(void)
   glPushMatrix();
     glTranslatef(fctrax,fctray,0);
     glRotatef(fcrot,0.0,0.0,1.0);
-    drawCycle();
+    drawCycle(frameTexture);
   glPopMatrix();
 
   glutSwapBuffers();
@@ -171,35 +180,74 @@ void processNormalKeys(unsigned char key, int x, int y) {
     case 'p':
     cout << supremo.x << " " << supremo.y << " " << supremo.z << endl; 
     break;
-    case 'v':
-    if(eye.x==0){
-        eye.x = 9.0;
+    case '3':
+    if(eye.y==6.0){
+        cameraMode = 0;
+	eye.x = 9.0;
         eye.y = 0.0;
-	    eye.z = 0.0;
+	eye.z = 0.0;
         up.x = 0.0;
-	    up.y = 0.0;
+	up.y = 0.0;
         up.z = 1.0;
     }
     else if(eye.x==9.0){
-        eye.x = 0.0;
-        eye.z = 9.0;
-        up.x = -1.0;
-        up.z = 0.0;
+        cameraMode = 3;
+	eye.x = 0.0;
+	eye.y = 6.0;
+        eye.z = 12.0;
+        up.x = 0.0;
+	up.y = 0.3;
+        up.z = 1.0;
     }
     break;
-    case 'k':
-    if(eye.x==0){
+    case '2':
+    if(eye.z==6.0){
+        cameraMode = 0;
 	eye.x = 9.0;
+        eye.y = 0.0;
 	eye.z = 0.0;
-	eye.y = 0.0;	
-	up.x = 0.0;
+        lookat.x = 0.0;
+	lookat.y = 0.0;
+	lookat.z = 0.0;
+        up.x = 0.0;
 	up.y = 0.0;
-	up.z = 1.0;
+        up.z = 1.0;
     }
-    else if(eye.x=9.0){
-	eye.y = 9.0;
-	eye.x = 0.0;
-    }  
+    else if(eye.x==9.0){
+        cameraMode = 1;
+	eye.x = 0.0+fctrax;
+	eye.y = 6.0+fctray;
+        eye.z = 6.5;
+	up.y = -1.0;
+        lookat.x = 0.0+fctrax;
+	lookat.y = 1.0+fctray;
+	lookat.z = 0.3;
+    }
+    break;
+    
+    case '1':
+    if(eye.z==6.0){
+        cameraMode = 0;
+	eye.x = 9.0;
+        eye.y = 0.0;
+	eye.z = 0.0;
+        lookat.x = 0.0;
+	lookat.y = 0.0;
+	lookat.z = 0.0;
+        up.x = 0.0;
+	up.y = 0.0;
+        up.z = 1.0;
+    }
+    else if(eye.x==9.0){
+        cameraMode = 1;
+	eye.x = 0.0+fctrax;
+	eye.y = 0.0+fctray;
+        eye.z = 6.0;
+	up.y = -2.0;
+        lookat.x = 0.0+fctrax;
+	lookat.y = -1.0+fctray;
+	lookat.z = 1.0;
+    }
     break;
 
     //seat height
@@ -246,22 +294,24 @@ void processNormalKeys(unsigned char key, int x, int y) {
 
 void processSpecialKeys(int key, int x, int y) {
   switch(key) {
-      case GLUT_KEY_UP:
+      case GLUT_KEY_PAGE_UP:
  //         theta += 0.5;
           break;
-      case GLUT_KEY_DOWN:
+      case GLUT_KEY_PAGE_DOWN:
  //         theta -= 0.5;
           break;
+      case GLUT_KEY_DOWN:
+            phi2 -= 2.5;
+            update_params(-2.5*M_PI/180,theta2);
+          break;
+      case GLUT_KEY_UP:
+            phi2 += 2.5;
+            update_params(+2.5*M_PI/180,theta2);
+          break;
       case GLUT_KEY_LEFT:
- //         phi -= 0.5;
-          break;
-      case GLUT_KEY_RIGHT:
- //         phi += 0.5;
-          break;
-      case GLUT_KEY_PAGE_UP:
           theta2 += 0.5;
           break;
-      case GLUT_KEY_PAGE_DOWN:
+      case GLUT_KEY_RIGHT:
           theta2 -= 0.5;
           break;
   }
@@ -276,7 +326,7 @@ void init(void)
   // Setup the view of the cube.
   glMatrixMode(GL_PROJECTION);
   //gluPerspective(field of view in degree, aspect ratio, Z near, Z far);
-  gluPerspective(80.0, 1.0, 1.0, 20.0);
+  gluPerspective(80.0, 1.0, 1.0, 30.0);
 
   glMatrixMode(GL_MODELVIEW);
   gluLookAt(9.0, 0.0, 0.0,  // eye is at (0,0,8)
@@ -360,6 +410,7 @@ int main(int argc, char **argv)
    wallTexture = LoadTexture("wall.bmp", texw, texh);
    roofTexture = LoadTexture("roof.bmp", texw, texh);
    paintTexture = LoadTexture("painting.bmp", texw, texh);
+   frameTexture = LoadTexture("frame.bmp" , texw, texh);
 
   init();
   glutMainLoop();
