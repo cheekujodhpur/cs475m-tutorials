@@ -297,6 +297,7 @@ void drawHandle(double phi,GLuint texture){
         GLfloat hldir[] = {0.0f,-1.0f,-0.1f};
         glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, hldir);
         glLightfv(GL_LIGHT2, GL_POSITION, hlpos);
+        drawCylinder(0.4,0.35, Vec(0.0,-0.3,0.0), Vec(107.0,0.0,0.0), Vec(0.0,0.1,0.85));
         glPopMatrix();
 
         glPushMatrix();
@@ -412,7 +413,7 @@ void drawRoom(GLuint texture, GLuint texture1, GLuint texture2, GLuint texture3,
         double b = 10;
         double c = 5;
 
-        int num = 10;
+        int num = 100;
         float istep = a/num;
         float jstep = b/num;
         float kstep = c/num;
@@ -603,3 +604,12 @@ GLuint LoadTexture(const char* filename, int &w, int &h){
     free(data);
     return texture; //return the texture id
 }
+
+GLfloat angleSum(GLfloat a, GLfloat b)
+{
+  a += b;
+  if (a < 0) return a+2*M_PI;
+  else if (a > 2*M_PI) return a-2*M_PI;
+  else return a;
+}
+

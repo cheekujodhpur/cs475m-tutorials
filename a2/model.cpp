@@ -34,17 +34,18 @@ double fctrax=0;
 double fctray=0;
 
 double ln_axle = 9.05;
-double ds_front = 4.8;
 
 void update_params(float delta_phi2, float theta2)
 {
     theta += 1.5 * delta_phi2 * (180.0/M_PI);
     float bw = 2.8725 * delta_phi2;
-    float fw = (bw-ln_axle)*cos(theta2) + sqrt(ln_axle*ln_axle + bw*(2*ln_axle-bw)*sin(theta2)*sin(theta2));
+    float fw = (bw-ln_axle)*cos(theta2*(M_PI/180.0)) + sqrt(ln_axle*ln_axle + bw*(2*ln_axle-bw)*sin(theta2*(M_PI/180.0)*sin(theta2*(M_PI/180.0))));
     phi += (fw*180.0)/(1.28*M_PI);
-    fcrot += asin(fw*sin(theta2*(M_PI/180.0))/ln_axle);
-    fctrax += fw*sin(theta2*(M_PI/180.0)) - ds_front*sin(fcrot);
-    fctray += fw*cos(theta2*(M_PI/180.0)) + ds_front*(1-cos(fcrot));  
+    std::cout<<fw;
+    float rotation = atan2(bw*sin(theta2*(M_PI/180.0)), ln_axle +  bw*cos(theta2*(M_PI/180.0)));
+    fcrot = (180/M_PI)*(angleSum(((M_PI/180)*fcrot),rotation));
+    fctrax += bw*sin(theta2*(M_PI/180.0)); 
+    fctray -= bw*cos(theta2*(M_PI/180.0));   
 }
 /*inline double bw(double x){
     return 1.915*theta(x)*(M_PI/180.0);
@@ -138,7 +139,7 @@ void display(void)
   //draw the cycle
   glPushMatrix();
     glTranslatef(fctrax,fctray,0);
-    glRotatef(fcrot*(180/M_PI),0.0,0.0,1.0);
+    glRotatef(fcrot,0.0,0.0,1.0);
     drawCycle();
   glPopMatrix();
 

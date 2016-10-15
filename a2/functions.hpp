@@ -36,3 +36,5 @@ void drawDisk(double height, double radius,double tooth_width, double tooth_heig
 void drawRoom(GLuint texture,GLuint texture1,GLuint texture2, GLuint texture3, bool roomLights);
 
 GLuint LoadTexture(const char* filename, int &width, int &height);
+GLfloat angleSum(GLfloat a, GLfloat b);
+
