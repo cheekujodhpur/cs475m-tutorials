@@ -30,7 +30,7 @@ double phi = 0;
 double theta2 = 0;
 //pedal angle paramter
 double phi2 = 30;
-
+double psi = 0;
 double fcrot=0;
 double fctrax=0;
 double fctray=0;
@@ -201,7 +201,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
     }
     break;
     case '2':
-    if(eye.z==6.0){
+    if(eye.z==6.5){
         cameraMode = 0;
 	eye.x = 9.0;
         eye.y = 0.0;
@@ -214,7 +214,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
         up.z = 1.0;
     }
     else if(eye.x==9.0){
-        cameraMode = 1;
+        cameraMode = 2;
 	eye.x = 0.0+fctrax;
 	eye.y = 6.0+fctray;
         eye.z = 6.5;
@@ -241,12 +241,12 @@ void processNormalKeys(unsigned char key, int x, int y) {
     else if(eye.x==9.0){
         cameraMode = 1;
 	eye.x = 0.0+fctrax;
-	eye.y = 0.0+fctray;
+	eye.y = 1.0+fctray;
         eye.z = 6.0;
-	up.y = -2.0;
+	up.y = -0.1;
         lookat.x = 0.0+fctrax;
-	lookat.y = -1.0+fctray;
-	lookat.z = 1.0;
+	lookat.y = -10.0+fctray;
+	lookat.z = 0.0;
     }
     break;
 
@@ -309,11 +309,20 @@ void processSpecialKeys(int key, int x, int y) {
             update_params(+2.5*M_PI/180,theta2);
           break;
       case GLUT_KEY_LEFT:
-          theta2 += 0.5;
+          theta2 += 2.5;
+	  if (cameraMode == 1){
+			psi =  atan2 ( -lookat.y , lookat.x );
+		lookat.x = sqrt((lookat.x)*(lookat.x)+(lookat.y)*(lookat.y))*cos(psi-2.5*(M_PI/180.0));
+		lookat.y = -sqrt((lookat.x)*(lookat.x)+(lookat.y)*(lookat.y))*sin(psi-2.5*(M_PI/180.0));  			
+	  } 
           break;
       case GLUT_KEY_RIGHT:
-          theta2 -= 0.5;
-          break;
+          theta2 -= 2.5;
+	  if (cameraMode == 1){
+			psi = atan2 ( -lookat.y , lookat.x );
+		lookat.x = sqrt((lookat.x)*(lookat.x)+(lookat.y)*(lookat.y))*cos(psi+2.5*(M_PI/180.0));
+		lookat.y = -sqrt((lookat.x)*(lookat.x)+(lookat.y)*(lookat.y))*sin(psi+2.5*(M_PI/180.0));  			
+	  } break;
   }
   //Redraw
   glutPostRedisplay();
